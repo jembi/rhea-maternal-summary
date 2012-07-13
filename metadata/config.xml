@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+	
+	<!-- Mobile Interface Module Properties -->
+	
+	<id>maternalsummary</id>
+	<name>Maternal Summary Module</name>
+	<version>0.1</version>
+	<package>org.openmrs.module.@MODULE_ID@</package>
+	<author>Jembi Health Systems</author>
+	<description>
+			Adds a maternal summary tab to the patient dashboard
+	</description>
+
+	<activator>@MODULE_PACKAGE@.MaternalSummaryActivator</activator>
+	
+	<require_version>1.6.5</require_version>
+	
+	<!-- Require modules -->
+	
+	<!-- Extensions -->
+	<extension>
+		<point>org.openmrs.patientDashboardTab</point>
+		<class>@MODULE_PACKAGE@.extension.html.MaternalSummaryTabExt</class>
+	</extension>
+	
+	<!-- Hibernate Mappings
+	<mappingFiles>
+		
+	</mappingFiles>
+	-->
+	
+	<!-- AOP
+	<advice>
+		<point>org.openmrs.api.FormService</point>
+		<class>@MODULE_PACKAGE@.advice.DuplicateFormAdvisor</class>
+	</advice>
+	 /AOP -->
+	
+	<!-- Required Privileges -->	 
+	
+	 <!-- Required Privileges -->
+
+	<!-- Required Global Properties
+	<globalProperty>
+		<property>@MODULE_ID@.</property>
+		<defaultValue></defaultValue>
+		<description>
+
+		</description>
+	</globalProperty>
+	Required Global Properties -->
+		
+	<!--
+	<dwr>
+		<allow>
+			<create creator="new" javascript="DWRFormEntryService">
+				<param name="class" value="org.openmrs.module.@MODULE_ID@.web.DWRFormEntryService"/>
+				<include method="enterForm"/>
+			</create>
+		</allow>
+
+		<signatures>
+			<![CDATA[
+			import @MODULE_PACKAGE@.web.DWRFormEntryService;
+			DWRFormEntryService.enterForm(Integer patientId, Integer formId, boolean useEncounter, List<String> fields);
+			]]>
+		</signatures>	
+	</dwr>
+	-->
+	
+	<!-- Servlets -->
+	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> 
+	<servlet>
+		<servlet-name>formDownload</servlet-name>
+		<servlet-class>@MODULE_PACKAGE@.web.FormDownloadServlet</servlet-class>
+	</servlet>
+	-->
+	<servlet>
+		<servlet-name>renderPDFServlet</servlet-name>
+		<servlet-class>@MODULE_PACKAGE@.web.servlet.RenderPDFServlet</servlet-class>
+	</servlet>
+	<!-- /Servlets -->
+	
+	
+	<!-- Internationalization -->
+	<!-- All message codes should start with @MODULE_ID@.* -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>	
+	<!-- /Internationalization -->
+	
+	<!-- Group Testing Module Properties -->
+	
+</module>
+
