@@ -6,6 +6,7 @@ public class ANCVisitsEntry {
 	private Date date;
 	private Integer weeksPregnant;
 	private Double weight;
+	private Double weightChange;
 	private Double bloodPressureSystolic;
 	private Double bloodPressureDiastolic;
 	private Double temperature;
@@ -24,6 +25,12 @@ public class ANCVisitsEntry {
 	}
 	public void setWeight(Double weight) {
 		this.weight = weight;
+	}
+	public Double getWeightChange() {
+		return weightChange;
+	}
+	public void setWeightChange(Double weightChange) {
+		this.weightChange = weightChange;
 	}
 	public Double getBloodPressureSystolic() {
 		return bloodPressureSystolic;

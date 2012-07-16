@@ -5,25 +5,25 @@
 	<form method="post" action="${pageContext.request.contextPath}/moduleServlet/maternalsummary/renderPDFServlet">
 		<input type="hidden" name="redir" value="${pageContext.request.contextPath}/patientDashboard.form?patientId=<%=request.getParameter("patientId")%>"/>
 		<input type="hidden" name="patientId" value="<%=request.getParameter("patientId")%>"/>
-		<input type="submit" value="Export to PDF">
+		<input type="submit" value='<spring:message code="maternalsummary.exportToPdf" />'>
 	</form>
 	<br/>
 </div>
-<b class="boxHeader">Obs History</b>
+<b class="boxHeader"><spring:message code="maternalsummary.obshistory" /></b>
 <div class="box">
 	<table width="63%">
 	<tbody>
 		<tr>
 			<td style="vertical-align: top;">
 				<fieldset>
-				<legend>Number of</legend>
+				<legend><spring:message code="maternalsummary.numberOf" /></legend>
 					<table cellpadding="5">
 					<tbody>
-						<tr><td>Pregnancies</td><td><b>${model.obsHistory.numPregnancies}</b></td></tr>
-						<tr><td>Births</td><td><b>${model.obsHistory.numBirths}</b></td></tr>
-						<tr><td>Live Births</td><td><b>${model.obsHistory.numLiveBirths}</b></td></tr>
-						<tr><td>Still Births</td><td><b>${model.obsHistory.numStillBirths}</b></td></tr>
-						<tr><td>C-Sections</td><td><b>${model.obsHistory.numCSections}</b></td></tr>
+						<tr><td><spring:message code="maternalsummary.pregnancies" /></td><td><b>${model.obsHistory.numPregnancies}</b></td></tr>
+						<tr><td><spring:message code="maternalsummary.births" /></td><td><b>${model.obsHistory.numBirths}</b></td></tr>
+						<tr><td><spring:message code="maternalsummary.liveBirths" /></td><td><b>${model.obsHistory.numLiveBirths}</b></td></tr>
+						<tr><td><spring:message code="maternalsummary.stillBirths" /></td><td><b>${model.obsHistory.numStillBirths}</b></td></tr>
+						<tr><td><spring:message code="maternalsummary.cSections" /></td><td><b>${model.obsHistory.numCSections}</b></td></tr>
 					</tbody>
 					</table>
 				</fieldset>
@@ -33,27 +33,27 @@
 				<tbody>
 				<tr><td>
 					<fieldset>
-					<legend>Last Born</legend>
+					<legend><spring:message code="maternalsummary.lastBorn" /></legend>
 						<table cellpadding="5">
 						<tbody>
 							<tr>
-								<td>Status</td>
+								<td><spring:message code="maternalsummary.status" /></td>
 								<c:choose>
 									<c:when test="${model.obsHistory.lastBornAlive == null}">
 										<td></td>
 									</c:when>
 									<c:when test="${model.obsHistory.lastBornAlive}">
-										<td><b>Alive</b></td>
+										<td><b><spring:message code="maternalsummary.alive" /></b></td>
 									</c:when>
 									<c:when test="${!model.obsHistory.lastBornAlive}">
-										<td><b>Dead</b></td>
+										<td><b><spring:message code="maternalsummary.dead" /></b></td>
 									</c:when>
 									<c:otherwise>
 										<td></td>
 									</c:otherwise>
 								</c:choose>
 							</tr>
-							<tr><td>Birth Date</td><td><b><openmrs:formatDate date="${model.obsHistory.lastBornBirthDate}" type="medium" /></b></td></tr>
+							<tr><td><spring:message code="maternalsummary.birthDate" /></td><td><b><openmrs:formatDate date="${model.obsHistory.lastBornBirthDate}" type="medium" /></b></td></tr>
 						</tbody>
 						</table>
 					</fieldset>
@@ -61,8 +61,8 @@
 				<tr><td>
 					<table cellpadding="5">
 					<tbody>
-						<tr><td>Date of LMP</td><td><b><openmrs:formatDate date="${model.obsHistory.dateOfLMP}" type="medium" /></b></td></tr>
-						<tr><td>Expected Delivery Date</td><td><b><openmrs:formatDate date="${model.obsHistory.expectedDeliveryDate}" type="medium" /></b></td></tr>
+						<tr><td><spring:message code="maternalsummary.dateOfLMP" /></td><td><b><openmrs:formatDate date="${model.obsHistory.dateOfLMP}" type="medium" /></b></td></tr>
+						<tr><td><spring:message code="maternalsummary.expectedDeliveryDate" /></td><td><b><openmrs:formatDate date="${model.obsHistory.expectedDeliveryDate}" type="medium" /></b></td></tr>
 					</tbody>
 					</table>
 				</td></tr>
@@ -73,20 +73,20 @@
 				<table cellpadding="5">
 				<tbody>
 					<tr>
-						<td>Gestational Age</td>
+						<td><spring:message code="maternalsummary.gestationalAge" /></td>
 						<td>
 							<c:choose>
 								<c:when test="${model.obsHistory.gestationalAge != null}">
-									<b>${model.obsHistory.gestationalAge} weeks</b>
+									<b>${model.obsHistory.gestationalAge} <spring:message code="maternalsummary.weeks" /></b>
 								</c:when>
 							</c:choose>
 						</td>
 					</tr>
-					<tr><td>Child's presentation inside</td><td><b>${model.obsHistory.presentation}</b></td></tr>
+					<tr><td><spring:message code="maternalsummary.childsPresentation" /></td><td><b>${model.obsHistory.presentation}</b></td></tr>
 					<tr>
 						<c:choose>
 							<c:when test="${model.obsHistory.isSeroPositive}">
-								<td>Highest WHO Stage</td><td><b>${model.obsHistory.highestWHOStage}</b></td>
+								<td><spring:message code="maternalsummary.highestWHOStage" /></td><td><b>${model.obsHistory.highestWHOStage}</b></td>
 							</c:when>
 						</c:choose>
 					</tr>
@@ -95,7 +95,7 @@
 			</td>
 			<td style="vertical-align: top;">
 				<fieldset>
-				<legend>Risks</legend>
+				<legend><spring:message code="maternalsummary.risks" /></legend>
 				<table cellpadding="5">
 				<tbody>
 					<c:forEach var="risk" items="${model.obsHistory.risks}">
@@ -110,7 +110,7 @@
 			</td>
 			<td style="vertical-align: top;">
 				<fieldset>
-				<legend>Past Medical History</legend>
+				<legend><spring:message code="maternalsummary.pastMedicalHistory" /></legend>
 				<table cellpadding="5">
 					<tbody>
 					<c:forEach var="historyItem" items="${model.medicalHistory.history}">
@@ -128,20 +128,20 @@
 	</table>
 
 </div>
-<b class="boxHeader">Previous Pregnancies</b>
+<b class="boxHeader"><spring:message code="maternalsummary.previousPregnancies" /></b>
 <div class="box">
 	<table cellpadding="5">
 	<thead>
 		<tr>
-			<th>No.</th>
-			<th>Date/Time</th>
-			<th>Mode of Delivery</th>
-			<th>Type of Birth</th>
-			<th>Birth Weight</th>
-			<th>Gender</th>
-			<th>Preterm/Term</th>
-			<th>Blood Loss at delivery</th>
-			<th>Maternal Outcome</th>
+			<th><spring:message code="maternalsummary.no" /></th>
+			<th><spring:message code="maternalsummary.date" /></th>
+			<th><spring:message code="maternalsummary.modeOfDelivery" /></th>
+			<th><spring:message code="maternalsummary.typeOfBirth" /></th>
+			<th><spring:message code="maternalsummary.birthWeight" /></th>
+			<th><spring:message code="maternalsummary.gender" /></th>
+			<th><spring:message code="maternalsummary.pretermTerm" /></th>
+			<th><spring:message code="maternalsummary.bloodLossAtDelivery" /></th>
+			<th><spring:message code="maternalsummary.maternalOutcome" /></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -161,27 +161,29 @@
 	</tbody>
 	</table>
 </div>
-<b class="boxHeader">ANC Visits</b>
+<b class="boxHeader"><spring:message code="maternalsummary.ancVisits" /></b>
 <div class="box">
 	<table cellpadding="5">
 	<thead>
 		<tr>
-			<th>Date</th>
-			<th>Gestational Age</th>
-			<th>Weight</th>
-			<th>Blood Pressure</th>
-			<th>Temperature</th>
-			<th>Fundal Height</th>
-			<th>Fetal Heart Rate</th>
-			<th>Presentation</th>
+			<th><spring:message code="maternalsummary.date" /></th>
+			<th><spring:message code="maternalsummary.gestationalAge" /></th>
+			<th><spring:message code="maternalsummary.weight" /></th>
+			<th><spring:message code="maternalsummary.weightChange" /></th>
+			<th><spring:message code="maternalsummary.bloodPressure" /></th>
+			<th><spring:message code="maternalsummary.temperature" /></th>
+			<th><spring:message code="maternalsummary.fundalHeight" /></th>
+			<th><spring:message code="maternalsummary.fetalHeartRate" /></th>
+			<th><spring:message code="maternalsummary.presentation" /></th>
 		</tr>
 	</thead>
 	<tbody>
 		<c:forEach var="ANCVisit" items="${model.ANCVisits}">
 		<tr>
 			<td><openmrs:formatDate date="${ANCVisit.date}" type="medium" /></td>
-			<td>${ANCVisit.weeksPregnant} weeks</td>
+			<td>${ANCVisit.weeksPregnant} <spring:message code="maternalsummary.weeks" /></td>
 			<td>${ANCVisit.weight} kg</td>
+			<td>${ANCVisit.weightChange} kg</td>
 			<td>${ANCVisit.bloodPressureSystolic} / ${ANCVisit.bloodPressureDiastolic}</td>
 			<td>${ANCVisit.temperature} °C</td>
 			<td>${ANCVisit.uterusLength} cm</td>
@@ -192,14 +194,14 @@
 	</tbody>
 	</table>
 </div>
-<b class="boxHeader">Medications and Treatment</b>
+<b class="boxHeader"><spring:message code="maternalsummary.medicationsAndTreatment" /></b>
 <div class="box">
 	<table>
 		<tbody>
 		<tr>
 			<td style="vertical-align: top;">
 				<fieldset>
-				<legend>Current Medication</legend>
+				<legend><spring:message code="maternalsummary.currentMedication" /></legend>
 				<table cellpadding="5">
 					<tbody>
 					<c:forEach var="medicationItem" items="${model.medicalHistory.medication}">
@@ -214,13 +216,13 @@
 			</td>
 			<td style="vertical-align: top;">
 			<fieldset>
-			<legend>Treatment Interventions</legend>
+			<legend><spring:message code="maternalsummary.treatmentInterventions" /></legend>
 			<table cellpadding="5">
 				<tbody>
 				<c:forEach var="intervention" items="${model.testsAndTreatment.interventions}">
 					<tr>
 						<td><openmrs:formatDate date="${intervention.date}" type="medium" /></td>
-						<td>Given ${intervention.intervention}</td>
+						<td><spring:message code="maternalsummary.given" /> ${intervention.intervention}</td>
 					</tr>
 				</c:forEach>
 				</tbody>
@@ -231,20 +233,18 @@
 		</tbody>
 	</table>
 </div>
-<b class="boxHeader">Lab</b>
+<b class="boxHeader"><spring:message code="maternalsummary.lab" /></b>
 <div class="box">
 	<table>
 		<tbody>
 		<tr>
 			<td style="vertical-align: top;">
-			<fieldset>
-			<legend>Testing</legend>
 			<table cellpadding="5">
 				<thead>
 					<tr>
-						<th><b>Date</b></th>
-						<th><b>Test</b></th>
-						<th><b>Result</b></th>
+						<th><b><spring:message code="maternalsummary.date" /></b></th>
+						<th><b><spring:message code="maternalsummary.test" /></b></th>
+						<th><b><spring:message code="maternalsummary.result" /></b></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -272,22 +272,21 @@
 			<table>
 				<tbody>
 					<tr>
-						<td>Syphilis Treatment</td>
+						<td><span title='<spring:message code="maternalsummary.treatedForSyphilisLong" />'><spring:message code="maternalsummary.treatedForSyphilisShort" /></span></td>
 						<td><b>${model.testsAndTreatment.tests.treatedForSyphilis}</b></td>
 					</tr>
 				</tbody>
 			</table>
-			</fieldset>
 			</td>
 			<td style="vertical-align: top;">
 			<fieldset>
-			<legend>Partner Testing</legend>
+			<legend><spring:message code="maternalsummary.partnerTesting" /></legend>
 			<table cellpadding="5">
 				<thead>
 					<tr>
-						<th><b>Date</b></th>
-						<th><b>Test</b></th>
-						<th><b>Result</b></th>
+						<th><b><spring:message code="maternalsummary.date" /></b></th>
+						<th><b><spring:message code="maternalsummary.test" /></b></th>
+						<th><b><spring:message code="maternalsummary.result" /></b></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -315,7 +314,7 @@
 			<table>
 				<tbody>
 					<tr>
-						<td>Syphilis Treatment</td>
+						<td><span title='<spring:message code="maternalsummary.partnerTreatedForSyphilisLong" />'><spring:message code="maternalsummary.partnerTreatedForSyphilisShort" /></span></td>
 						<td><b>${model.testsAndTreatment.partnerTests.treatedForSyphilis}</b></td>
 					</tr>
 				</tbody>
@@ -326,7 +325,7 @@
 		</tbody>
 	</table>
 </div>
-<b class="boxHeader">ARV Regimens</b>
+<b class="boxHeader"><spring:message code="maternalsummary.arvRegimens" /></b>
 <div class="box">
 	<table>
 		<tbody>
@@ -335,13 +334,13 @@
 			<table cellpadding="5">
 				<thead>
 					<tr>
-						<th>Creatinine Level</th>
-						<th>CD4 Date</th>
-						<th>CD4 Count</th>
-						<th>WHO Stage</th>
-						<th>ARV Date</th>
-						<th>ARV Regimen</th>
-						<th>Cotrimoxazole Date</th>
+						<th><spring:message code="maternalsummary.creatinineLevel" /></th>
+						<th><spring:message code="maternalsummary.cd4Date" /></th>
+						<th><spring:message code="maternalsummary.cd4Count" /></th>
+						<th><spring:message code="maternalsummary.whoStage" /></th>
+						<th><spring:message code="maternalsummary.arvDate" /></th>
+						<th><spring:message code="maternalsummary.arvRegimen" /></th>
+						<th><spring:message code="maternalsummary.cotrimoxazoleDate" /></th>
 					</tr>
 				</thead>
 				<tbody>

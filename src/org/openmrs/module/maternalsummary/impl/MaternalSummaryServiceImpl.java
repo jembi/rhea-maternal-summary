@@ -353,6 +353,8 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			for (Obs obs : enc.getObs()) {
 				if (MaternalConcept.WEIGHT.getConcept().equals(obs.getConcept()))
 					entry.setWeight(obs.getValueNumeric());
+				else if (MaternalConcept.WEIGHT_CHANGE.getConcept().equals(obs.getConcept()))
+					entry.setWeightChange(obs.getValueNumeric());
 				else if (MaternalConcept.NUMBER_OF_WEEKS_PREGNANT.getConcept().equals(obs.getConcept()))
 					entry.setWeeksPregnant(obs.getValueNumeric().intValue());
 				else if (MaternalConcept.TEMPEARTURE.getConcept().equals(obs.getConcept()))

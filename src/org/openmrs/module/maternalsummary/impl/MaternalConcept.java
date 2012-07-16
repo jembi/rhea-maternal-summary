@@ -58,6 +58,7 @@ public enum MaternalConcept {
 	/* ANC Visits*/
 	NUMBER_OF_WEEKS_PREGNANT				(1279),
 	WEIGHT									(5089),
+	WEIGHT_CHANGE							(8511),
 	TEMPEARTURE								(5088),
 	BP_SYSTOLIC								(5085),
 	BP_DIASTOLIC							(5086),
