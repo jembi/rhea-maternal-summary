@@ -266,6 +266,18 @@
 					</tr>
 					</c:when>
 					</c:choose>
+					<c:forEach var="spw" items="${model.testsAndTreatment.seroPositiveWomen}">
+					<tr>
+						<td><openmrs:formatDate date="${spw.CD4CountDate}" type="medium" /></td>
+						<td>CD4 Count</td>
+						<td>${spw.CD4Count}</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Creatinine Level</td>
+						<td>${spw.creatinineLevel} mmol/L</td>
+					</tr>
+					</c:forEach>
 				</tbody>
 			</table>
 			<br/>
@@ -334,25 +346,19 @@
 			<table cellpadding="5">
 				<thead>
 					<tr>
-						<th><spring:message code="maternalsummary.creatinineLevel" /></th>
-						<th><spring:message code="maternalsummary.cd4Date" /></th>
-						<th><spring:message code="maternalsummary.cd4Count" /></th>
-						<th><spring:message code="maternalsummary.whoStage" /></th>
 						<th><spring:message code="maternalsummary.arvDate" /></th>
 						<th><spring:message code="maternalsummary.arvRegimen" /></th>
 						<th><spring:message code="maternalsummary.cotrimoxazoleDate" /></th>
+						<th><spring:message code="maternalsummary.whoStage" /></th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="spw" items="${model.testsAndTreatment.seroPositiveWomen}">
 						<tr>
-							<td>${spw.creatinineLevel} mmol/L</td>
-							<td><openmrs:formatDate date="${spw.CD4CountDate}" type="medium" /></td>
-							<td>${spw.CD4Count}</td>
-							<td>${spw.WHOStage}</td>
 							<td><openmrs:formatDate date="${spw.ARVProphylaxisDate}" type="medium" /></td>
 							<td>${spw.ARVProphylaxis}</td>
 							<td><openmrs:formatDate date="${spw.cotrimoxazoleStartDate}" type="medium" /></td>
+							<td>${spw.WHOStage}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
