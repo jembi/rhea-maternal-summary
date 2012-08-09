@@ -20,6 +20,7 @@ public interface PDFRenderer {
 	void tableStart(int numCols) throws PDFRendererException;
 	void tableAdd(String text) throws PDFRendererException;
 	void tableAddBold(String text) throws PDFRendererException;
+	void tableAddInputField() throws PDFRendererException;
 	void tableEnd() throws PDFRendererException;
 	
 	public static class PDFRendererException extends Exception {

@@ -9,7 +9,7 @@
 	</form>
 	<br/>
 </div>
-<b class="boxHeader"><spring:message code="maternalsummary.obshistory" /></b>
+<b class="boxHeader"><spring:message code="maternalsummary.obsHistory" /></b>
 <div class="box">
 	<table width="63%">
 	<tbody>

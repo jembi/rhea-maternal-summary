@@ -84,6 +84,7 @@ public class MaternalSummary {
 			renderMedicalHistory(renderer);
 			renderTestsAndTreatment(renderer);
 			renderANCVisits(renderer);
+			renderReferralCommentsBox(renderer);
 		
 		} finally {
 			renderer.close();
@@ -285,6 +286,16 @@ public class MaternalSummary {
 			renderer.tableAdd(toString(visit.getFetalHeartRate()));
 			renderer.tableAdd(toString(visit.getPresentation()));
 		}
+		renderer.tableEnd();
+	}
+	
+	
+	private void renderReferralCommentsBox(PDFRenderer renderer) throws PDFRendererException  {
+		renderer.addHeader2(mss.getMessage("maternalsummary.referral"));
+		
+		renderer.tableStart(1);
+		renderer.tableAddBold(mss.getMessage("maternalsummary.comments"));
+		renderer.tableAddInputField();
 		renderer.tableEnd();
 	}
 	
