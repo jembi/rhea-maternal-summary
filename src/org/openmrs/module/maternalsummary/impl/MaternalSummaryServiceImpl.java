@@ -357,7 +357,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 					entry.setWeightChange(obs.getValueNumeric());
 				else if (MaternalConcept.NUMBER_OF_WEEKS_PREGNANT.getConcept().equals(obs.getConcept()))
 					entry.setWeeksPregnant(obs.getValueNumeric().intValue());
-				else if (MaternalConcept.TEMPEARTURE.getConcept().equals(obs.getConcept()))
+				else if (MaternalConcept.TEMPERATURE.getConcept().equals(obs.getConcept()))
 					entry.setTemperature(obs.getValueNumeric());
 				else if (MaternalConcept.BP_SYSTOLIC.getConcept().equals(obs.getConcept()))
 					entry.setBloodPressureSystolic(obs.getValueNumeric());
