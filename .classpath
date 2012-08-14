@@ -30,5 +30,6 @@
 	<classpathentry kind="lib" path="lib/joda-time-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/itextpdf-5.3.0.jar"/>
 	<classpathentry kind="lib" path="/Users/hannes/Projects/RHEA/maternalsummary/lib/ehcache-1.2.4.jar"/>
+	<classpathentry kind="lib" path="/Users/hannes/Projects/RHEA/maternalsummary/lib-common/rheapocadapter-api-0.5.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

@@ -7,6 +7,11 @@
 		<input type="hidden" name="patientId" value="<%=request.getParameter("patientId")%>"/>
 		<input type="submit" value='<spring:message code="maternalsummary.exportToPdf" />'>
 	</form>
+	<form method="post" action="${pageContext.request.contextPath}/moduleServlet/maternalsummary/refreshFromSHRServlet">
+		<input type="hidden" name="redir" value="${pageContext.request.contextPath}/patientDashboard.form?patientId=<%=request.getParameter("patientId")%>"/>
+		<input type="hidden" name="patientId" value="<%=request.getParameter("patientId")%>"/>
+		<input type="submit" value='<spring:message code="maternalsummary.refreshFromSHR" />'>
+	</form>
 	<br/>
 </div>
 <b class="boxHeader"><spring:message code="maternalsummary.obsHistory" /></b>
