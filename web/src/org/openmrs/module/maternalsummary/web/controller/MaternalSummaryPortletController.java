@@ -46,6 +46,6 @@ public class MaternalSummaryPortletController extends PortletController {
 		model.put("medicalHistory", summary.getMedicalHistory());
 		model.put("testsAndTreatment", summary.getTestsAndTreatment());
 		model.put("ANCVisits", summary.getANCVisits());
+		model.put("referrals", summary.getReferrals());
 	}
-	
 }

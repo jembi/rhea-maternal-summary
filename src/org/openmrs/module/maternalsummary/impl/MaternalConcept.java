@@ -67,6 +67,12 @@ public enum MaternalConcept {
 	
 	/* General */
 	YES										("RWCS", "1065"),
+	
+	/* Referrals */
+	REFERRED_TO								("LOINC", "57133-1"),
+	REFERRAL_URGENCY						("RWCS", "8517"),
+	REFERRAL_REASON							("LOINC", "42349-1"),
+	REFERRAL_CONFIRMATION_COMMENTS			("RWCS", "8541"),
 	;
 	
 	

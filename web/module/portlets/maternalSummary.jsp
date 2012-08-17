@@ -373,4 +373,68 @@
 		</tbody>
 	</table>
 </div>
+
+<b class="boxHeader"><spring:message code="maternalsummary.referrals" /></b>
+<div class="box">
+	<c:choose>
+		<c:when test="${model.referrals.referredButNotConfirmed}">
+			<p><spring:message code="maternalsummary.hasBeenReferredButNotConfirmed" /></p>
+			<p><b><spring:message code="maternalsummary.hasBeenReferredButNotConfirmedWarning" /></b></p>
+			<p><a href="http://poc.jembi.org:8080/openmrs_1.6.5_v/module/htmlformentry/htmlFormEntry.form?personId=<%=request.getParameter("patientId")%>&patientId=<%=request.getParameter("patientId")%>&returnUrl=&formId=10">Referral Confirmation Form</a></p>
+		</c:when>
+	</c:choose>
+	<table>
+		<tbody>
+		<tr>
+			<td style="vertical-align: top;">
+			<fieldset>
+			<legend><spring:message code="maternalsummary.referrals" /></legend>
+			<table cellpadding="5">
+				<thead>
+					<tr>
+						<th><b><spring:message code="maternalsummary.date" /></b></th>
+						<th><b><spring:message code="maternalsummary.referralLocation" /></b></th>
+						<th><b><spring:message code="maternalsummary.referralUrgency" /></b></th>
+						<th><b><spring:message code="maternalsummary.referralReason" /></b></th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="referral" items="${model.referrals.referrals}">
+						<tr>
+							<td><openmrs:formatDate date="${referral.date}" type="medium" /></td>
+							<td>${referral.referredTo}</td>
+							<td>${referral.urgency}</td>
+							<td>${referral.reason}</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+			</fieldset>
+			</td>
+			<td style="vertical-align: top;">
+			<fieldset>
+			<legend><spring:message code="maternalsummary.confirmations" /></legend>
+			<table cellpadding="5">
+				<thead>
+					<tr>
+						<th><b><spring:message code="maternalsummary.date" /></b></th>
+						<th><b><spring:message code="maternalsummary.comments" /></b></th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="confirmation" items="${model.referrals.confirmations}">
+						<tr>
+							<td><openmrs:formatDate date="${confirmation.date}" type="medium" /></td>
+							<td>${confirmation.comments}</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+			</fieldset>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
 </openmrs:hasPrivilege>

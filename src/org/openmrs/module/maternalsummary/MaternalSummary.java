@@ -13,6 +13,7 @@ import org.openmrs.module.maternalsummary.data.ANCVisitsEntry;
 import org.openmrs.module.maternalsummary.data.DeliverySummaryEntry;
 import org.openmrs.module.maternalsummary.data.MedicalHistory;
 import org.openmrs.module.maternalsummary.data.ObsHistory;
+import org.openmrs.module.maternalsummary.data.Referrals;
 import org.openmrs.module.maternalsummary.data.TestsAndTreatment;
 import org.openmrs.module.maternalsummary.pdf.PDFRenderer;
 import org.openmrs.module.maternalsummary.pdf.PDFRenderer.PDFRendererException;
@@ -29,6 +30,7 @@ public class MaternalSummary {
 	private MedicalHistory medicalHistory;
 	private TestsAndTreatment testsAndTreatment;
 	private List<ANCVisitsEntry> ANCVisits;
+	private Referrals referrals;
 	
 	private transient MessageSourceService mss;
 	
@@ -69,7 +71,12 @@ public class MaternalSummary {
 	public void setANCVisits(List<ANCVisitsEntry> aNCVisits) {
 		ANCVisits = aNCVisits;
 	}
-	
+	public Referrals getReferrals() {
+		return referrals;
+	}
+	public void setReferrals(Referrals referrals) {
+		this.referrals = referrals;
+	}
 	
 	public void renderPDF(OutputStream out) throws PDFRendererException {
 		mss = Context.getMessageSourceService();

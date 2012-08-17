@@ -19,6 +19,7 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.User;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -29,6 +30,7 @@ import org.openmrs.module.maternalsummary.data.ANCVisitsEntry;
 import org.openmrs.module.maternalsummary.data.DeliverySummaryEntry;
 import org.openmrs.module.maternalsummary.data.MedicalHistory;
 import org.openmrs.module.maternalsummary.data.ObsHistory;
+import org.openmrs.module.maternalsummary.data.Referrals;
 import org.openmrs.module.maternalsummary.data.TestsAndTreatment;
 
 public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements MaternalSummaryService {
@@ -52,6 +54,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		res.setMedicalHistory(getMedicalHistory(p));
 		res.setTestsAndTreatment(getTestsAndTreatment(p));
 		res.setANCVisits(getANCVisits(p));
+		res.setReferrals(getReferrals(p));
 		
 		DataCache.put(key, res);
 		return res;
@@ -377,6 +380,90 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		return res;
 	}
 	
+	/* Referrals */
+	
+	private Referrals getReferrals(Patient p) {
+		Referrals dst = new Referrals();
+		EncounterService es = Context.getEncounterService();
+		EncounterType referralEncounterType = Context.getEncounterService().getEncounterType("ANC Referral");
+		EncounterType referralConfirmationEncounterType = Context.getEncounterService().getEncounterType("ANC Referral Confirmation");
+		
+		List<Encounter> referrals = es.getEncounters(
+			p, null, null, null, null, Collections.singleton(referralEncounterType), null, false
+		);
+		List<Encounter> confirmations = es.getEncounters(
+			p, null, null, null, null, Collections.singleton(referralConfirmationEncounterType), null, false
+		);
+		
+		Collections.sort(referrals, new EncDateSorter());
+		Collections.sort(confirmations, new EncDateSorter());
+		
+		dst.setReferrals(convertToReferrals(referrals));
+		dst.setConfirmations(convertToConfirmations(confirmations));
+		
+		if (referrals.size()==0) {
+			dst.setReferredButNotConfirmed(false);
+		} else if (confirmations.size()==0) {
+			dst.setReferredButNotConfirmed(true);
+		} else {
+			dst.setReferredButNotConfirmed(
+				referrals.get(0).getEncounterDatetime().after(confirmations.get(0).getEncounterDatetime())
+			);
+		}
+		
+		return dst;
+	}
+	
+	private List<Referrals.Referral> convertToReferrals(List<Encounter> encs) {
+		List<Referrals.Referral> res = new ArrayList<Referrals.Referral>(encs.size());
+		
+		for (Encounter enc : encs) {
+			Referrals.Referral ref = new Referrals.Referral();
+			ref.setDate(enc.getEncounterDatetime());
+			
+			for (Obs obs : enc.getObs()) {
+				if (MaternalConcept.REFERRED_TO.getConcept().equals(obs.getConcept()))
+					ref.setReferredTo(obs.getValueAsString(Context.getLocale()));
+				else if (MaternalConcept.REFERRAL_URGENCY.getConcept().equals(obs.getConcept()))
+					ref.setUrgency(obs.getValueAsString(Context.getLocale()));
+				else if (MaternalConcept.REFERRAL_REASON.getConcept().equals(obs.getConcept()))
+					ref.setReason(obs.getValueAsString(Context.getLocale()));
+			}
+			
+			res.add(ref);
+		}
+		
+		return res;
+	}
+	
+	private List<Referrals.Confirmation> convertToConfirmations(List<Encounter> encs) {
+		List<Referrals.Confirmation> res = new ArrayList<Referrals.Confirmation>(encs.size());
+		
+		for (Encounter enc : encs) {
+			Referrals.Confirmation ref = new Referrals.Confirmation();
+			ref.setDate(enc.getEncounterDatetime());
+			
+			for (Obs obs : enc.getObs()) {
+				if (MaternalConcept.REFERRAL_CONFIRMATION_COMMENTS.getConcept().equals(obs.getConcept()))
+					ref.setComments(obs.getValueAsString(Context.getLocale()));
+			}
+			
+			res.add(ref);
+		}
+		
+		return res;
+	}
+	
+	private static class EncDateSorter implements Comparator<Encounter> {
+		@Override
+		public int compare(Encounter enc1, Encounter enc2) {
+			if (enc1==enc2)
+				return 0;
+			return enc2.getEncounterDatetime().compareTo(enc1.getEncounterDatetime());
+		}
+	}
+	
+	/**/
 	
 	private Form searchForForm(String nameLike) {
 		String query = nameLike.toLowerCase();
