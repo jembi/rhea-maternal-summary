@@ -3,32 +3,38 @@ package org.openmrs.module.maternalsummary.impl;
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
 
+/**
+ * Moved all lookups to RWCS (basically just the concept_id)
+ * Code lookups are currently very slow, and so we'll have to index
+ * the concept_map table first. When this is done, we can just grab the older
+ * version of this file with the correct mappings from svn.
+ */
 public enum MaternalConcept {
 
 	/* Delivery Summary */
-	DATE_OF_DELIVERY						("LOINC", "21112-8"),
-	MODE_OF_DELIVERY						("LOINC", "72149-8"),
-	TYPE_OF_BIRTH							("LOINC", "72146-4"),
-	BIRTH_WEIGHT							("LOINC", "8339-4"),
-	GENDER									("LOINC", "72143-1"),
-	PRETERM_OR_TERM							("LOINC", "72147-2"),
-	BLOOD_LOSS								("LOINC", "9110-8"),
-	MATERNAL_OUTCOME						("LOINC", "72144-9"),
+	DATE_OF_DELIVERY						("RWCS", "5599"),
+	MODE_OF_DELIVERY						("RWCS", "5630"),
+	TYPE_OF_BIRTH							("RWCS", "8161"),
+	BIRTH_WEIGHT							("RWCS", "5916"),
+	GENDER									("RWCS", "8160"),
+	PRETERM_OR_TERM							("RWCS", "8177"),
+	BLOOD_LOSS								("RWCS", "8191"),
+	MATERNAL_OUTCOME						("RWCS", "8163"),
 	
 	/* Obs History */
-	NUM_PREGNANCIES							("LOINC", "11996-6"),
-	NUM_TERM_BIRTHS							("LOINC", "11977-6"),
-	NUM_STILL_BIRTHS						("LOINC", "57062-2"),
-	NUM_CSECTIONS							("LOINC", "68497-7"),
-	LAST_BORN_STATUS						("LOINC", "72153-0"),
-	LAST_BORN_BIRTHDATE						("LOINC", "68499-3"),
-	DATE_OF_LMP								("LOINC", "8665 2"),
-	EXPECTED_DELIVERY_DATE					("LOINC", "11779-6"),
-	PRESENTATION							("LOINC", "72155-5"),
-	RISK									("LOINC", "72154-8"),
+	NUM_PREGNANCIES							("RWCS", "5624"),
+	NUM_TERM_BIRTHS							("RWCS", "1053"),
+	NUM_STILL_BIRTHS						("RWCS", "8142"),
+	NUM_CSECTIONS							("RWCS", "8143"),
+	LAST_BORN_STATUS						("RWCS", "8159"),
+	LAST_BORN_BIRTHDATE						("RWCS", "8404"),
+	DATE_OF_LMP								("RWCS", "968"),
+	EXPECTED_DELIVERY_DATE					("RWCS", "6188"),
+	PRESENTATION							("RWCS", "8149"),
+	RISK									("RWCS", "8156"),
 	
 	/* Medical History */
-	MEDICAL_HISTORY							("LOINC", "72185-2"),
+	MEDICAL_HISTORY							("RWCS", "8505"),
 	
 	/* Tests and Treatment */
 	HIV_TEST_DATE							("RWCS", "1837"),
@@ -50,28 +56,28 @@ public enum MaternalConcept {
 	ARV_START_DATE							("RWCS", "6132"),
 	ARV_REGIMEN								("RWCS", "2589"),
 	COTRIMOXAZOLE_DATE						("RWCS", "1499"),
-	INTERVENTION_IRON_AND_FOLIC_ACID		("LOINC", "72180-3"),
-	INTERVENTION_PYRIMETHAMINE_SULFADOXINE	("LOINC", "72179-5"),
+	INTERVENTION_IRON_AND_FOLIC_ACID		("RWCS", "8171"),
+	INTERVENTION_PYRIMETHAMINE_SULFADOXINE	("RWCS", "8407"),
 	INTERVENTION_MEBENDAZOLE				("RWCS", "8406"),
-	INTERVENTION_MOSQUITO_NET				("LOINC", "72178-7"),
+	INTERVENTION_MOSQUITO_NET				("RWCS", "8405"),
 	
 	/* ANC Visits*/
-	NUMBER_OF_WEEKS_PREGNANT				("LOINC", "11885-1"),
-	WEIGHT									("LOINC", "29463-7"),
-	WEIGHT_CHANGE							("LOINC", "46040-2"),
-	TEMPERATURE								("LOINC", "8310-5"),
-	BP_SYSTOLIC								("LOINC", "8480-6"),
-	BP_DIASTOLIC							("LOINC", "84862-4"),
-	UTERUS_LENGTH							("LOINC", "11881-0"),
-	FETAL_HEART_RATE						("LOINC", "55283-6"),
+	NUMBER_OF_WEEKS_PREGNANT				("RWCS", "1279"),
+	WEIGHT									("RWCS", "5089"),
+	WEIGHT_CHANGE							("RWCS", "8511"),
+	TEMPERATURE								("RWCS", "5088"),
+	BP_SYSTOLIC								("RWCS", "5085"),
+	BP_DIASTOLIC							("RWCS", "5086"),
+	UTERUS_LENGTH							("RWCS", "8145"),
+	FETAL_HEART_RATE						("RWCS", "8146"),
 	
 	/* General */
 	YES										("RWCS", "1065"),
 	
 	/* Referrals */
-	REFERRED_TO								("LOINC", "57133-1"),
+	REFERRED_TO								("RWCS", "8514"),
 	REFERRAL_URGENCY						("RWCS", "8517"),
-	REFERRAL_REASON							("LOINC", "42349-1"),
+	REFERRAL_REASON							("RWCS", "1739"),
 	REFERRAL_CONFIRMATION_COMMENTS			("RWCS", "8541"),
 	;
 	
