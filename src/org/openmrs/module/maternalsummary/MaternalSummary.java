@@ -13,6 +13,7 @@ import org.openmrs.module.maternalsummary.data.ANCVisitsEntry;
 import org.openmrs.module.maternalsummary.data.DeliverySummaryEntry;
 import org.openmrs.module.maternalsummary.data.MedicalHistory;
 import org.openmrs.module.maternalsummary.data.ObsHistory;
+import org.openmrs.module.maternalsummary.data.RapidSMSMessage;
 import org.openmrs.module.maternalsummary.data.Referrals;
 import org.openmrs.module.maternalsummary.data.TestsAndTreatment;
 import org.openmrs.module.maternalsummary.pdf.PDFRenderer;
@@ -31,6 +32,7 @@ public class MaternalSummary {
 	private TestsAndTreatment testsAndTreatment;
 	private List<ANCVisitsEntry> ANCVisits;
 	private Referrals referrals;
+	private List<RapidSMSMessage> rapidSMSMessages;
 	
 	private transient MessageSourceService mss;
 	
@@ -76,6 +78,12 @@ public class MaternalSummary {
 	}
 	public void setReferrals(Referrals referrals) {
 		this.referrals = referrals;
+	}
+	public List<RapidSMSMessage> getRapidSMSMessages() {
+		return rapidSMSMessages;
+	}
+	public void setRapidSMSMessages(List<RapidSMSMessage> rapidSMSMessages) {
+		this.rapidSMSMessages = rapidSMSMessages;
 	}
 	
 	public void renderPDF(OutputStream out) throws PDFRendererException {
@@ -168,8 +176,10 @@ public class MaternalSummary {
 		renderer.tableAdd(toString(obsHistory.getGestationalAge()) + " " + mss.getMessage("maternalsummary.weeks"));
 		renderer.tableAddBold(mss.getMessage("maternalsummary.childsPresentation"));
 		renderer.tableAdd(obsHistory.getPresentation());
-		renderer.tableAddBold(mss.getMessage("maternalsummary.highestWHOStage"));
-		renderer.tableAdd(toString(obsHistory.getHighestWHOStage()));
+		if (obsHistory.getIsSeroPositive()) {
+			renderer.tableAddBold(mss.getMessage("maternalsummary.highestWHOStage"));
+			renderer.tableAdd(toString(obsHistory.getHighestWHOStage()));
+		}
 		renderer.tableEnd();
 		
 		renderer.addHeader3(mss.getMessage("maternalsummary.risks"));
@@ -177,6 +187,16 @@ public class MaternalSummary {
 		renderer.tableAddBold(mss.getMessage("maternalsummary.risk"));
 		renderer.tableAddBold(mss.getMessage("maternalsummary.dateReported"));
 		for (ObsHistory.Risk risk : obsHistory.getRisks()) {
+			renderer.tableAdd(risk.getRisk());
+			renderer.tableAdd(formatMedium(risk.getDateReported()));
+		}
+		renderer.tableEnd();
+		
+		renderer.addHeader3(mss.getMessage("maternalsummary.obsRisks"));
+		renderer.tableStart(2);
+		renderer.tableAddBold(mss.getMessage("maternalsummary.risk"));
+		renderer.tableAddBold(mss.getMessage("maternalsummary.dateReported"));
+		for (ObsHistory.Risk risk : obsHistory.getObsRisks()) {
 			renderer.tableAdd(risk.getRisk());
 			renderer.tableAdd(formatMedium(risk.getDateReported()));
 		}
@@ -206,7 +226,7 @@ public class MaternalSummary {
 		renderer.tableStart(2);
 		for (TestsAndTreatment.TreatmentIntervention ti : testsAndTreatment.getInterventions()) {
 			renderer.tableAdd(formatMedium(ti.getDate()));
-			renderer.tableAdd(mss.getMessage("maternalsummary.given") + ti.getIntervention());
+			renderer.tableAdd(mss.getMessage("maternalsummary.given") + " " + ti.getIntervention());
 		}
 		renderer.tableEnd();
 	}
@@ -260,7 +280,7 @@ public class MaternalSummary {
 		renderer.tableAddBold(mss.getMessage("maternalsummary.arvDate"));
 		renderer.tableAddBold(mss.getMessage("maternalsummary.cotrimoxazoleDate"));
 		for (TestsAndTreatment.SeroPositiveWomen spw : testsAndTreatment.getSeroPositiveWomen()) {
-			renderer.tableAdd(toString(spw.getCreatinineLevel()));
+			renderer.tableAdd(toString(spw.getCreatinineLevel()) + " mmol/L");
 			renderer.tableAdd(toString(spw.getCD4Count()));
 			renderer.tableAdd(formatMedium(spw.getCD4CountDate()));
 			renderer.tableAdd(spw.getWHOStage());
@@ -274,7 +294,7 @@ public class MaternalSummary {
 	private void renderANCVisits(PDFRenderer renderer) throws PDFRendererException {
 		renderer.addHeader2(mss.getMessage("maternalsummary.ancVisits"));
 		
-		renderer.tableStart(8);
+		renderer.tableStart(7);
 		renderer.tableAddBold(mss.getMessage("maternalsummary.date"));
 		renderer.tableAddBold(mss.getMessage("maternalsummary.weight"));
 		renderer.tableAddBold(mss.getMessage("maternalsummary.weightChange"));
@@ -282,16 +302,14 @@ public class MaternalSummary {
 		renderer.tableAddBold(mss.getMessage("maternalsummary.temperature"));
 		renderer.tableAddBold(mss.getMessage("maternalsummary.fundalHeight"));
 		renderer.tableAddBold(mss.getMessage("maternalsummary.fetalHeartRate"));
-		renderer.tableAddBold(mss.getMessage("maternalsummary.presentation"));
 		for (ANCVisitsEntry visit : ANCVisits) {
 			renderer.tableAdd(formatMedium(visit.getDate()));
-			renderer.tableAdd(toString(visit.getWeight()));
-			renderer.tableAdd(toString(visit.getWeightChange()));
-			renderer.tableAdd( toString(visit.getBloodPressureSystolic()) + " / " + toString(visit.getBloodPressureDiastolic()) );
-			renderer.tableAdd(toString(visit.getTemperature()));
-			renderer.tableAdd(toString(visit.getUterusLength()));
-			renderer.tableAdd(toString(visit.getFetalHeartRate()));
-			renderer.tableAdd(toString(visit.getPresentation()));
+			renderer.tableAdd(toString(visit.getWeight()) + " kg");
+			renderer.tableAdd(toString(visit.getWeightChange()) + " kg");
+			renderer.tableAdd( toString(visit.getBloodPressureSystolic()) + " / " + toString(visit.getBloodPressureDiastolic()) + " mmHg" );
+			renderer.tableAdd(toString(visit.getTemperature()) + " ¡C");
+			renderer.tableAdd(toString(visit.getUterusLength()) + " cm");
+			renderer.tableAdd(toString(visit.getFetalHeartRate()) + " bpm");
 		}
 		renderer.tableEnd();
 	}

@@ -47,5 +47,6 @@ public class MaternalSummaryPortletController extends PortletController {
 		model.put("testsAndTreatment", summary.getTestsAndTreatment());
 		model.put("ANCVisits", summary.getANCVisits());
 		model.put("referrals", summary.getReferrals());
+		model.put("rapidsmsMessages", summary.getRapidSMSMessages());
 	}
 }

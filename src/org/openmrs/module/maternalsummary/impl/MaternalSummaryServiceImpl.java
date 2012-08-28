@@ -30,6 +30,7 @@ import org.openmrs.module.maternalsummary.data.ANCVisitsEntry;
 import org.openmrs.module.maternalsummary.data.DeliverySummaryEntry;
 import org.openmrs.module.maternalsummary.data.MedicalHistory;
 import org.openmrs.module.maternalsummary.data.ObsHistory;
+import org.openmrs.module.maternalsummary.data.RapidSMSMessage;
 import org.openmrs.module.maternalsummary.data.Referrals;
 import org.openmrs.module.maternalsummary.data.TestsAndTreatment;
 
@@ -55,6 +56,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		res.setTestsAndTreatment(getTestsAndTreatment(p));
 		res.setANCVisits(getANCVisits(p));
 		res.setReferrals(getReferrals(p));
+		res.setRapidSMSMessages(getRapidSMSMessages(p));
 		
 		DataCache.put(key, res);
 		return res;
@@ -98,9 +100,9 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 				return o2.getDateTime().compareTo(o1.getDateTime());
 			}
 		});
-		int num = 1;
+		int num = res.size();
 		for (DeliverySummaryEntry dse : res)
-			dse.setNumber(num++);
+			dse.setNumber(num--);
 		
 		return res;
 	}
@@ -120,9 +122,11 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	}
 	
 	private void fillOBAndPastMedicalHistory(ObsHistory dst, Patient p) {
-		Encounter latest = getLatestEncounterForForm(p, "RHEA OB and Past Medical History", "Past Medical History");
-		if (latest==null)
+		List<Encounter> encs = getEncountersForForm(p, "RHEA OB and Past Medical History", "Past Medical History");
+		if (encs==null || encs.isEmpty())
 			return;
+		
+		Encounter latest = getLatestEncounter(encs);
 		
 		for (Obs obs : latest.getObs()) {
 			if (MaternalConcept.NUM_PREGNANCIES.getConcept().equals(obs.getConcept()))
@@ -145,6 +149,14 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		
 		if (dst.getNumLiveBirths()!=null && dst.getNumStillBirths()!=null)
 			dst.setNumBirths(dst.getNumLiveBirths() + dst.getNumStillBirths());
+		
+		for (Encounter enc : encs) {
+			for (Obs obs : enc.getObs()) {
+				if (MaternalConcept.OBS_RISK.getConcept().equals(obs.getConcept()))
+					dst.addObsRisk( new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()) );
+			}
+		}
+		Collections.reverse(dst.getObsRisks());
 	}
 	
 	private Boolean lastBornStatusObsValueAsBoolean(Obs obs) {
@@ -159,16 +171,23 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	}
 	
 	private void fillPhysical(ObsHistory dst, Patient p) {
-		Encounter latest = getLatestEncounterForForm(p, "RHEA ANC Physical", "Physical");
-		if (latest==null)
+		List<Encounter> encs = getEncountersForForm(p, "RHEA ANC Physical", "Physical");
+		if (encs==null || encs.isEmpty())
 			return;
 		
+		Encounter latest = getLatestEncounter(encs);
 		for (Obs obs : latest.getObs()) {
 			if (MaternalConcept.PRESENTATION.getConcept().equals(obs.getConcept()))
 				dst.setPresentation(obs.getValueAsString(Context.getLocale()));
-			else if (MaternalConcept.RISK.getConcept().equals(obs.getConcept()))
-				dst.addRisk( new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), latest.getEncounterDatetime()) );
 		}
+			
+		for (Encounter enc : encs) {
+			for (Obs obs : enc.getObs()) {
+				if (MaternalConcept.RISK.getConcept().equals(obs.getConcept()))
+					dst.addRisk( new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()) );
+			}
+		}
+		Collections.reverse(dst.getRisks());
 	}
 	
 	private void calcGestationalAge(ObsHistory dst) {
@@ -196,7 +215,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		dst.setHighestWHOStage( parseLevel(spwList.get(0).getWHOStage()) );
 		for (int i=1; i<spwList.size(); i++) {
 			Integer level = parseLevel(spwList.get(i).getWHOStage());
-			if (level!=null && dst.getHighestWHOStage() < level)
+			if (level!=null && dst.getHighestWHOStage()!=null && dst.getHighestWHOStage() < level)
 				dst.setHighestWHOStage(level);
 		}
 	}
@@ -233,14 +252,18 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	}
 		
 	private void fillHistory(MedicalHistory dst, Patient p) {
-		Encounter latest = getLatestEncounterForForm(p, "RHEA OB and Past Medical History", "Past Medical History");
-		if (latest==null)
+		List<Encounter> encs = getEncountersForForm(p, "RHEA OB and Past Medical History", "Past Medical History");
+		if (encs==null || encs.isEmpty())
 			return;
 		
-		for (Obs obs : latest.getObs()) {
-			if (MaternalConcept.MEDICAL_HISTORY.getConcept().equals(obs.getConcept()))
-				dst.addHistory(new MedicalHistory.HistoryItem(obs.getValueAsString(Context.getLocale()), latest.getEncounterDatetime()));
+		for (Encounter enc : encs) {
+			for (Obs obs : enc.getObs()) {
+				if (MaternalConcept.MEDICAL_HISTORY.getConcept().equals(obs.getConcept()))
+					dst.addHistory(new MedicalHistory.HistoryItem(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()));
+			}
 		}
+		
+		Collections.reverse(dst.getHistory());
 	}
 
 	
@@ -319,22 +342,25 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			
 			dst.addSeroPositiveWomenEncounter(spw);
 		}
+		Collections.reverse(dst.getSeroPositiveWomen());
 	}
 	
 	private void fillTreatmentInterventions(TestsAndTreatment dst, Patient p) {
-		Encounter latest = getLatestEncounterForForm(p, "RHEA Maternal Treatments and Interventions", "Maternal Treatments and Interventions");
-		if (latest==null)
+		List<Encounter> encs = getEncountersForForm(p, "RHEA Maternal Treatments and Interventions", "Maternal Treatments and Interventions");
+		if (encs==null || encs.isEmpty())
 			return;
 		
-		for (Obs obs : latest.getObs()) {
-			if (MaternalConcept.INTERVENTION_IRON_AND_FOLIC_ACID.getConcept().equals(obs.getConcept()))
-				addInterventionIfGiven(latest, obs, dst, "Iron and Folic Acid");
-			else if (MaternalConcept.INTERVENTION_PYRIMETHAMINE_SULFADOXINE.getConcept().equals(obs.getConcept()))
-				addInterventionIfGiven(latest, obs, dst, "Pyrimethamine Sulfadoxine");
-			else if (MaternalConcept.INTERVENTION_MEBENDAZOLE.getConcept().equals(obs.getConcept()))
-				addInterventionIfGiven(latest, obs, dst, "Mebendazole");
-			else if (MaternalConcept.INTERVENTION_MOSQUITO_NET.getConcept().equals(obs.getConcept()))
-				addInterventionIfGiven(latest, obs, dst, "Mosquito Net");
+		for (Encounter enc : encs) {
+			for (Obs obs : enc.getObs()) {
+				if (MaternalConcept.INTERVENTION_IRON_AND_FOLIC_ACID.getConcept().equals(obs.getConcept()))
+					addInterventionIfGiven(enc, obs, dst, "Iron and Folic Acid");
+				else if (MaternalConcept.INTERVENTION_PYRIMETHAMINE_SULFADOXINE.getConcept().equals(obs.getConcept()))
+					addInterventionIfGiven(enc, obs, dst, "Pyrimethamine Sulfadoxine");
+				else if (MaternalConcept.INTERVENTION_MEBENDAZOLE.getConcept().equals(obs.getConcept()))
+					addInterventionIfGiven(enc, obs, dst, "Mebendazole");
+				else if (MaternalConcept.INTERVENTION_MOSQUITO_NET.getConcept().equals(obs.getConcept()))
+					addInterventionIfGiven(enc, obs, dst, "Mosquito Net");
+			}
 		}
 	}
 	
@@ -363,13 +389,13 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 				else if (MaternalConcept.TEMPERATURE.getConcept().equals(obs.getConcept()))
 					entry.setTemperature(obs.getValueNumeric());
 				else if (MaternalConcept.BP_SYSTOLIC.getConcept().equals(obs.getConcept()))
-					entry.setBloodPressureSystolic(obs.getValueNumeric());
+					entry.setBloodPressureSystolic(castInt(obs.getValueNumeric()));
 				else if (MaternalConcept.BP_DIASTOLIC.getConcept().equals(obs.getConcept()))
-					entry.setBloodPressureDiastolic(obs.getValueNumeric());
+					entry.setBloodPressureDiastolic(castInt(obs.getValueNumeric()));
 				else if (MaternalConcept.UTERUS_LENGTH.getConcept().equals(obs.getConcept()))
 					entry.setUterusLength(obs.getValueNumeric());
 				else if (MaternalConcept.FETAL_HEART_RATE.getConcept().equals(obs.getConcept()))
-					entry.setFetalHeartRate(obs.getValueNumeric());
+					entry.setFetalHeartRate(castInt(obs.getValueNumeric()));
 				else if (MaternalConcept.PRESENTATION.getConcept().equals(obs.getConcept()))
 					entry.setPresentation(obs.getValueAsString(Context.getLocale()));
 			}
@@ -377,6 +403,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			res.add(entry);
 		}
 		
+		Collections.reverse(res);
 		return res;
 	}
 	
@@ -463,6 +490,12 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		}
 	}
 	
+	/* RapidSMS Messages */
+	
+	private List<RapidSMSMessage> getRapidSMSMessages(Patient p) {
+		return Collections.emptyList();
+	}
+	
 	/**/
 	
 	private Form searchForForm(String nameLike) {
@@ -492,7 +525,12 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		if (encounters==null || encounters.isEmpty())
 			return null;
 		
+		return getLatestEncounter(encounters);
+	}
+	
+	private Encounter getLatestEncounter(List<Encounter> encounters) {
 		Encounter latest = encounters.get(0);
+		
 		for (int i=1; i<encounters.size(); i++) {
 			if (latest.getEncounterDatetime().compareTo(encounters.get(i).getEncounterDatetime()) < 0)
 				latest = encounters.get(i);
@@ -504,5 +542,9 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	@SuppressWarnings("rawtypes")
 	private static Integer buildKey(Class clazz, int patientId) {
 		return clazz.getName().hashCode()*clazz.hashCode() + patientId;
+	}
+	
+	private static final Integer castInt(Double d) {
+		return d!=null ? d.intValue() : null;
 	}
 }

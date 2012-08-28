@@ -32,6 +32,7 @@ public enum MaternalConcept {
 	EXPECTED_DELIVERY_DATE					("RWCS", "6188"),
 	PRESENTATION							("RWCS", "8149"),
 	RISK									("RWCS", "8156"),
+	OBS_RISK								("RWCS", "8534"),
 	
 	/* Medical History */
 	MEDICAL_HISTORY							("RWCS", "8505"),
@@ -93,7 +94,7 @@ public enum MaternalConcept {
 	
 	public Concept getConcept() {
 		if ("RWCS".equals(codeNamespace))
-			return Context.getConceptService().getConcept( Integer.parseInt(code) );
+			return new Concept( Integer.parseInt(code) );
 		return Context.getConceptService().getConceptByMapping(code, codeNamespace);
 	}
 }

@@ -7,11 +7,11 @@ public class ANCVisitsEntry {
 	private Integer weeksPregnant;
 	private Double weight;
 	private Double weightChange;
-	private Double bloodPressureSystolic;
-	private Double bloodPressureDiastolic;
+	private Integer bloodPressureSystolic;
+	private Integer bloodPressureDiastolic;
 	private Double temperature;
 	private Double uterusLength;
-	private Double fetalHeartRate;
+	private Integer fetalHeartRate;
 	private String presentation;
 	
 	public Date getDate() {
@@ -32,16 +32,16 @@ public class ANCVisitsEntry {
 	public void setWeightChange(Double weightChange) {
 		this.weightChange = weightChange;
 	}
-	public Double getBloodPressureSystolic() {
+	public Integer getBloodPressureSystolic() {
 		return bloodPressureSystolic;
 	}
-	public void setBloodPressureSystolic(Double bloodPressureSystolic) {
+	public void setBloodPressureSystolic(Integer bloodPressureSystolic) {
 		this.bloodPressureSystolic = bloodPressureSystolic;
 	}
-	public Double getBloodPressureDiastolic() {
+	public Integer getBloodPressureDiastolic() {
 		return bloodPressureDiastolic;
 	}
-	public void setBloodPressureDiastolic(Double bloodPressureDiastolic) {
+	public void setBloodPressureDiastolic(Integer bloodPressureDiastolic) {
 		this.bloodPressureDiastolic = bloodPressureDiastolic;
 	}
 	public Double getTemperature() {
@@ -56,10 +56,10 @@ public class ANCVisitsEntry {
 	public void setUterusLength(Double uterusLength) {
 		this.uterusLength = uterusLength;
 	}
-	public Double getFetalHeartRate() {
+	public Integer getFetalHeartRate() {
 		return fetalHeartRate;
 	}
-	public void setFetalHeartRate(Double fetalHeartRate) {
+	public void setFetalHeartRate(Integer fetalHeartRate) {
 		this.fetalHeartRate = fetalHeartRate;
 	}
 	public Integer getWeeksPregnant() {

@@ -115,6 +115,21 @@
 			</td>
 			<td style="vertical-align: top;">
 				<fieldset>
+				<legend><spring:message code="maternalsummary.obsRisks" /></legend>
+				<table cellpadding="5">
+				<tbody>
+					<c:forEach var="obsRisk" items="${model.obsHistory.obsRisks}">
+					<tr>
+						<td><openmrs:formatDate date="${obsRisk.dateReported}" type="medium"/></td>
+						<td>${obsRisk.risk}</td>
+					</tr>
+					</c:forEach>
+				</tbody>
+				</table>
+				</fieldset>
+			</td>
+			<td style="vertical-align: top;">
+				<fieldset>
 				<legend><spring:message code="maternalsummary.pastMedicalHistory" /></legend>
 				<table cellpadding="5">
 					<tbody>
@@ -179,7 +194,6 @@
 			<th><spring:message code="maternalsummary.temperature" /></th>
 			<th><spring:message code="maternalsummary.fundalHeight" /></th>
 			<th><spring:message code="maternalsummary.fetalHeartRate" /></th>
-			<th><spring:message code="maternalsummary.presentation" /></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -189,11 +203,10 @@
 			<td>${ANCVisit.weeksPregnant} <spring:message code="maternalsummary.weeks" /></td>
 			<td>${ANCVisit.weight} kg</td>
 			<td>${ANCVisit.weightChange} kg</td>
-			<td>${ANCVisit.bloodPressureSystolic} / ${ANCVisit.bloodPressureDiastolic}</td>
+			<td>${ANCVisit.bloodPressureSystolic} / ${ANCVisit.bloodPressureDiastolic} mmHg</td>
 			<td>${ANCVisit.temperature} °C</td>
 			<td>${ANCVisit.uterusLength} cm</td>
-			<td>${ANCVisit.fetalHeartRate}</td>
-			<td>${ANCVisit.presentation}</td>
+			<td>${ANCVisit.fetalHeartRate} bpm</td>
 		</tr>
 		</c:forEach>
 	</tbody>
@@ -379,7 +392,7 @@
 	<c:choose>
 		<c:when test="${model.referrals.referredButNotConfirmed}">
 			<p><spring:message code="maternalsummary.hasBeenReferredButNotConfirmed" /></p>
-			<p><b><spring:message code="maternalsummary.hasBeenReferredButNotConfirmedWarning" /></b></p>
+			<p><b><span style="color: #FF0000;"><spring:message code="maternalsummary.hasBeenReferredButNotConfirmedWarning" /></span></b></p>
 			<p><a href="http://poc.jembi.org:8080/openmrs_1.6.5_v/module/htmlformentry/htmlFormEntry.form?personId=<%=request.getParameter("patientId")%>&patientId=<%=request.getParameter("patientId")%>&returnUrl=&formId=10">Referral Confirmation Form</a></p>
 		</c:when>
 	</c:choose>
@@ -431,6 +444,40 @@
 				</tbody>
 			</table>
 			</fieldset>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<b class="boxHeader"><spring:message code="maternalsummary.rapidsmsMsg" /></b>
+<div class="box">
+	<table>
+		<tbody>
+		<tr>
+			<td style="vertical-align: top;">
+			<table cellpadding="5">
+				<thead>
+					<tr>
+						<th><spring:message code="maternalsummary.date" /></th>
+						<th><spring:message code="maternalsummary.rapidsmsEncounterType" /></th>
+						<th><spring:message code="maternalsummary.rapidsmsCode" /></th>
+						<th><spring:message code="maternalsummary.rapidsmsName" /></th>
+						<th><spring:message code="maternalsummary.rapidsmsValue" /></th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="rsms" items="${model.rapidsmsMessages}">
+						<tr>
+							<td><openmrs:formatDate date="${rsms.date}" type="medium" /></td>
+							<td>${rsms.type}</td>
+							<td>${rsms.code}</td>
+							<td>${rsms.name}</td>
+							<td>${rsms.value}</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
 			</td>
 		</tr>
 		</tbody>

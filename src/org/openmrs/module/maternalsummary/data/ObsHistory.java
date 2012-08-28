@@ -20,6 +20,7 @@ public class ObsHistory {
 	private Boolean isSeroPositive;
 	private Integer highestWHOStage;
 	private List<Risk> risks = new ArrayList<Risk>();
+	private List<Risk> obsRisks = new ArrayList<Risk>();
 	
 	public Integer getNumPregnancies() {
 		return numPregnancies;
@@ -114,6 +115,17 @@ public class ObsHistory {
 	
 	public void addRisk(Risk risk) {
 		risks.add(risk);
+	}
+	
+	public List<Risk> getObsRisks() {
+		return obsRisks;
+	}
+	public void setObsRisks(List<Risk> obsRisks) {
+		this.obsRisks = obsRisks;
+	}
+
+	public void addObsRisk(Risk risk) {
+		obsRisks.add(risk);
 	}
 	
 	public static class Risk {
