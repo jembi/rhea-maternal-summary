@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
+import org.openmrs.ConceptMap;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -116,7 +117,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		fillOBAndPastMedicalHistory(res, p);
 		fillPhysical(res, p);
 		calcGestationalAge(res);
-		calcHighestWHOStage(res, p);
+		//calcHighestWHOStage(res, p);
 		
 		return res;
 	}
@@ -150,13 +151,13 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		if (dst.getNumLiveBirths()!=null && dst.getNumStillBirths()!=null)
 			dst.setNumBirths(dst.getNumLiveBirths() + dst.getNumStillBirths());
 		
-		for (Encounter enc : encs) {
+		for (int i=encs.size()-1; i>=0; i--) {
+			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
 				if (MaternalConcept.OBS_RISK.getConcept().equals(obs.getConcept()))
 					dst.addObsRisk( new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()) );
 			}
 		}
-		Collections.reverse(dst.getObsRisks());
 	}
 	
 	private Boolean lastBornStatusObsValueAsBoolean(Obs obs) {
@@ -181,13 +182,13 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 				dst.setPresentation(obs.getValueAsString(Context.getLocale()));
 		}
 			
-		for (Encounter enc : encs) {
+		for (int i=encs.size()-1; i>=0; i--) {
+			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
 				if (MaternalConcept.RISK.getConcept().equals(obs.getConcept()))
 					dst.addRisk( new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()) );
 			}
 		}
-		Collections.reverse(dst.getRisks());
 	}
 	
 	private void calcGestationalAge(ObsHistory dst) {
@@ -202,6 +203,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			dst.setGestationalAge(null);
 	}
 	
+	@Deprecated
 	private void calcHighestWHOStage(ObsHistory dst, Patient p) {
 		List<TestsAndTreatment.SeroPositiveWomen> spwList = getTestsAndTreatment(p).getSeroPositiveWomen();
 		
@@ -256,14 +258,13 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		if (encs==null || encs.isEmpty())
 			return;
 		
-		for (Encounter enc : encs) {
+		for (int i=encs.size()-1; i>=0; i--) {
+			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
 				if (MaternalConcept.MEDICAL_HISTORY.getConcept().equals(obs.getConcept()))
 					dst.addHistory(new MedicalHistory.HistoryItem(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()));
 			}
 		}
-		
-		Collections.reverse(dst.getHistory());
 	}
 
 	
@@ -278,7 +279,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		res = new TestsAndTreatment();
 		
 		fillTests(res, p);
-		fillSeroPositiveWomen(res, p);
+		//fillSeroPositiveWomen(res, p);
 		fillTreatmentInterventions(res, p);
 		
 		DataCache.put(key, res);
@@ -319,6 +320,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		}
 	}
 	
+	@Deprecated
 	private void fillSeroPositiveWomen(TestsAndTreatment dst, Patient p) {
 		for (Encounter enc : getEncountersForForm(p, "RHEA Sero Positive Women", "Sero Positive")) {
 			TestsAndTreatment.SeroPositiveWomen spw = new TestsAndTreatment.SeroPositiveWomen();
@@ -493,7 +495,45 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	/* RapidSMS Messages */
 	
 	private List<RapidSMSMessage> getRapidSMSMessages(Patient p) {
-		return Collections.emptyList();
+		EncounterService es = Context.getEncounterService();
+		List<RapidSMSMessage> res = new ArrayList<RapidSMSMessage>();
+		List<EncounterType> types = new ArrayList<EncounterType>(3);
+		types.add( Context.getEncounterService().getEncounterType("RapidSMS Notification BIRTH") );
+		types.add( Context.getEncounterService().getEncounterType("RapidSMS Notification RISK") );
+		types.add( Context.getEncounterService().getEncounterType("RapidSMS Notification Maternal Death") );
+		
+		for (EncounterType type : types) {
+			if (type==null) {
+				log.error("RapidSMS Notification encounter types are not correctly setup on the system");
+				return Collections.emptyList();
+			}
+		}
+		
+		List<Encounter> encs = es.getEncounters(
+			p, null, null, null, null, types, null, false
+		);
+		
+		for (int i=encs.size()-1; i<=0; i--) {
+			Encounter enc = encs.get(i);
+			for (Obs obs : enc.getObs()) {
+				RapidSMSMessage msg = new RapidSMSMessage();
+				msg.setDate(enc.getEncounterDatetime());
+				msg.setType(enc.getEncounterType().getName());
+				msg.setName(obs.getConcept().getDisplayString());
+				msg.setValue(obs.getValueAsString(Context.getLocale()));
+				
+				for (ConceptMap mapping : obs.getConcept().getConceptMappings()) {
+					if ("RSMS".equalsIgnoreCase(mapping.getSource().getName())) {
+						msg.setCode(mapping.getSourceCode());
+						break;
+					}
+				}
+				
+				res.add(msg);
+			}
+		}
+		
+		return res;
 	}
 	
 	/**/

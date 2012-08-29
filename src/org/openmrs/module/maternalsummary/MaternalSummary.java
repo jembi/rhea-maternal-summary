@@ -176,10 +176,10 @@ public class MaternalSummary {
 		renderer.tableAdd(toString(obsHistory.getGestationalAge()) + " " + mss.getMessage("maternalsummary.weeks"));
 		renderer.tableAddBold(mss.getMessage("maternalsummary.childsPresentation"));
 		renderer.tableAdd(obsHistory.getPresentation());
-		if (obsHistory.getIsSeroPositive()) {
-			renderer.tableAddBold(mss.getMessage("maternalsummary.highestWHOStage"));
-			renderer.tableAdd(toString(obsHistory.getHighestWHOStage()));
-		}
+		//if (obsHistory.getIsSeroPositive()) {
+		//	renderer.tableAddBold(mss.getMessage("maternalsummary.highestWHOStage"));
+		//	renderer.tableAdd(toString(obsHistory.getHighestWHOStage()));
+		//}
 		renderer.tableEnd();
 		
 		renderer.addHeader3(mss.getMessage("maternalsummary.risks"));
@@ -270,25 +270,25 @@ public class MaternalSummary {
 		renderer.tableAdd(testsAndTreatment.getPartnerTests().getTreatedForSyphilis());
 		renderer.tableEnd();
 		
-		renderer.addHeader3(mss.getMessage("maternalsummary.arvRegimens"));
-		renderer.tableStart(7);
-		renderer.tableAddBold(mss.getMessage("maternalsummary.creatinineLevel"));
-		renderer.tableAddBold(mss.getMessage("maternalsummary.cd4Count"));
-		renderer.tableAddBold(mss.getMessage("maternalsummary.cd4Date"));
-		renderer.tableAddBold(mss.getMessage("maternalsummary.whoStage"));
-		renderer.tableAddBold(mss.getMessage("maternalsummary.arvRegimen"));
-		renderer.tableAddBold(mss.getMessage("maternalsummary.arvDate"));
-		renderer.tableAddBold(mss.getMessage("maternalsummary.cotrimoxazoleDate"));
-		for (TestsAndTreatment.SeroPositiveWomen spw : testsAndTreatment.getSeroPositiveWomen()) {
-			renderer.tableAdd(toString(spw.getCreatinineLevel()) + " mmol/L");
-			renderer.tableAdd(toString(spw.getCD4Count()));
-			renderer.tableAdd(formatMedium(spw.getCD4CountDate()));
-			renderer.tableAdd(spw.getWHOStage());
-			renderer.tableAdd(spw.getARVProphylaxis());
-			renderer.tableAdd(formatMedium(spw.getARVProphylaxisDate()));
-			renderer.tableAdd(formatMedium(spw.getCotrimoxazoleStartDate()));
-		}
-		renderer.tableEnd();
+		//renderer.addHeader3(mss.getMessage("maternalsummary.arvRegimens"));
+		//renderer.tableStart(7);
+		//renderer.tableAddBold(mss.getMessage("maternalsummary.creatinineLevel"));
+		//renderer.tableAddBold(mss.getMessage("maternalsummary.cd4Count"));
+		//renderer.tableAddBold(mss.getMessage("maternalsummary.cd4Date"));
+		//renderer.tableAddBold(mss.getMessage("maternalsummary.whoStage"));
+		//renderer.tableAddBold(mss.getMessage("maternalsummary.arvRegimen"));
+		//renderer.tableAddBold(mss.getMessage("maternalsummary.arvDate"));
+		//renderer.tableAddBold(mss.getMessage("maternalsummary.cotrimoxazoleDate"));
+		//for (TestsAndTreatment.SeroPositiveWomen spw : testsAndTreatment.getSeroPositiveWomen()) {
+		//	renderer.tableAdd(toString(spw.getCreatinineLevel()) + " mmol/L");
+		//	renderer.tableAdd(toString(spw.getCD4Count()));
+		//	renderer.tableAdd(formatMedium(spw.getCD4CountDate()));
+		//	renderer.tableAdd(spw.getWHOStage());
+		//	renderer.tableAdd(spw.getARVProphylaxis());
+		//	renderer.tableAdd(formatMedium(spw.getARVProphylaxisDate()));
+		//	renderer.tableAdd(formatMedium(spw.getCotrimoxazoleStartDate()));
+		//}
+		//renderer.tableEnd();
 	}
 	
 	private void renderANCVisits(PDFRenderer renderer) throws PDFRendererException {

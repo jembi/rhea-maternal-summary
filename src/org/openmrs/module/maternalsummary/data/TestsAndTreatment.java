@@ -27,14 +27,17 @@ public class TestsAndTreatment {
 		this.partnerTests = partnerTests;
 	}
 
+	@Deprecated
 	public List<SeroPositiveWomen> getSeroPositiveWomen() {
 		return seroPositiveWomen;
 	}
 
+	@Deprecated
 	public void setSeroPositiveWomen(List<SeroPositiveWomen> seroPositiveWomen) {
 		this.seroPositiveWomen = seroPositiveWomen;
 	}
 	
+	@Deprecated
 	public void addSeroPositiveWomenEncounter(SeroPositiveWomen seroPositiveWomen) {
 		this.seroPositiveWomen.add(seroPositiveWomen);
 	}
@@ -118,6 +121,7 @@ public class TestsAndTreatment {
 		}
 	}
 
+	@Deprecated
 	public static class SeroPositiveWomen {
 		private Double creatinineLevel;
 		private Double CD4Count;

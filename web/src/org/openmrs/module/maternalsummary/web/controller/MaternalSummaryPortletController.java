@@ -41,6 +41,7 @@ public class MaternalSummaryPortletController extends PortletController {
 		int patientId = (Integer)model.get("patientId");
 		summary = mss.getMaternalSummary(patientId);
 		
+		model.put("isPatientFemale", new Boolean(summary.getPatient().getGender().equalsIgnoreCase("F")));
 		model.put("deliverySummary", summary.getDeliverySummary());
 		model.put("obsHistory", summary.getObsHistory());
 		model.put("medicalHistory", summary.getMedicalHistory());

@@ -100,9 +100,11 @@ public class ObsHistory {
 	public void setIsSeroPositive(Boolean isSeroPositive) {
 		this.isSeroPositive = isSeroPositive;
 	}
+	@Deprecated
 	public Integer getHighestWHOStage() {
 		return highestWHOStage;
 	}
+	@Deprecated
 	public void setHighestWHOStage(Integer highestWHOStage) {
 		this.highestWHOStage = highestWHOStage;
 	}

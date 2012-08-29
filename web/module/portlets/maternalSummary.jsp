@@ -1,6 +1,9 @@
 <%@ include file="/WEB-INF/template/include.jsp" %>
 
 <openmrs:hasPrivilege privilege="View Encounters">
+
+<c:choose>
+<c:when test="${model.isPatientFemale}">
 <div>
 	<form method="post" action="${pageContext.request.contextPath}/moduleServlet/maternalsummary/renderPDFServlet">
 		<input type="hidden" name="redir" value="${pageContext.request.contextPath}/patientDashboard.form?patientId=<%=request.getParameter("patientId")%>"/>
@@ -88,13 +91,13 @@
 						</td>
 					</tr>
 					<tr><td><spring:message code="maternalsummary.childsPresentation" /></td><td><b>${model.obsHistory.presentation}</b></td></tr>
-					<tr>
+					<%-- <tr>
 						<c:choose>
 							<c:when test="${model.obsHistory.isSeroPositive}">
 								<td><spring:message code="maternalsummary.highestWHOStage" /></td><td><b>${model.obsHistory.highestWHOStage}</b></td>
 							</c:when>
 						</c:choose>
-					</tr>
+					</tr> --%>
 				</tbody>
 				</table>
 			</td>
@@ -284,6 +287,7 @@
 					</tr>
 					</c:when>
 					</c:choose>
+					<%--
 					<c:forEach var="spw" items="${model.testsAndTreatment.seroPositiveWomen}">
 					<tr>
 						<td><openmrs:formatDate date="${spw.CD4CountDate}" type="medium" /></td>
@@ -296,6 +300,7 @@
 						<td>${spw.creatinineLevel} mmol/L</td>
 					</tr>
 					</c:forEach>
+					--%>
 				</tbody>
 			</table>
 			<br/>
@@ -355,6 +360,8 @@
 		</tbody>
 	</table>
 </div>
+
+<%--
 <b class="boxHeader"><spring:message code="maternalsummary.arvRegimens" /></b>
 <div class="box">
 	<table>
@@ -386,6 +393,7 @@
 		</tbody>
 	</table>
 </div>
+--%>
 
 <b class="boxHeader"><spring:message code="maternalsummary.referrals" /></b>
 <div class="box">
@@ -483,5 +491,12 @@
 		</tbody>
 	</table>
 </div>
+</c:when>
+<c:otherwise>
+<div>
+<spring:message code="maternalsummary.patientIsMale" />
+</div>
+</c:otherwise>
+</c:choose>
 
 </openmrs:hasPrivilege>
