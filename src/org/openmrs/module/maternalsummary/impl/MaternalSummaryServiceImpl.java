@@ -155,9 +155,23 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
 				if (MaternalConcept.OBS_RISK.getConcept().equals(obs.getConcept()))
-					dst.addObsRisk( new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()) );
+					addRiskIfLatest(
+						dst.getObsRisks(),
+						new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime())
+					);
 			}
 		}
+	}
+	
+	private void addRiskIfLatest(List<ObsHistory.Risk> dst, ObsHistory.Risk risk) {
+		for (int i=0; i<dst.size(); i++) {
+			if (dst.get(i).getRisk().equals(risk.getRisk())) {
+				if (dst.get(i).getDateReported().before(risk.getDateReported()))
+					dst.set(i, risk);
+				return;
+			}
+		}
+		dst.add(risk);
 	}
 	
 	private Boolean lastBornStatusObsValueAsBoolean(Obs obs) {
@@ -186,7 +200,10 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
 				if (MaternalConcept.RISK.getConcept().equals(obs.getConcept()))
-					dst.addRisk( new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()) );
+					addRiskIfLatest(
+						dst.getRisks(),
+						new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime())
+					);
 			}
 		}
 	}
@@ -362,6 +379,8 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 					addInterventionIfGiven(enc, obs, dst, "Mebendazole");
 				else if (MaternalConcept.INTERVENTION_MOSQUITO_NET.getConcept().equals(obs.getConcept()))
 					addInterventionIfGiven(enc, obs, dst, "Mosquito Net");
+				else if (MaternalConcept.INTERVENTION_TETANUS_VACCINE.getConcept().equals(obs.getConcept()))
+					addInterventionIfGiven(enc, obs, dst, "Tetanus Vaccine");
 			}
 		}
 	}

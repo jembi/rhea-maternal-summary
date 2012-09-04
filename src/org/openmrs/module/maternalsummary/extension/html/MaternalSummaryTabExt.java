@@ -35,7 +35,7 @@ public class MaternalSummaryTabExt extends PatientDashboardTabExt {
 	
 	@Override
 	public String getRequiredPrivilege() {
-		return "View Reports";
+		return "View Encounters";
 	}
 	
 	@Override
