@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.maternalsummary.extension.html;
 
+import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.PatientDashboardTabExt;
 
@@ -45,7 +46,7 @@ public class MaternalSummaryTabExt extends PatientDashboardTabExt {
 	
 	@Override
 	public String getTabName() {
-		return "Maternal Clinical Summary";
+		return Context.getMessageSourceService().getMessage("maternalsummary.header");
 	}
 	
 }
