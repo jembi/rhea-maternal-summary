@@ -532,7 +532,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			p, null, null, null, null, types, null, false
 		);
 		
-		for (int i=encs.size()-1; i<=0; i--) {
+		for (int i=encs.size()-1; i>=0; i--) {
 			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
 				RapidSMSMessage msg = new RapidSMSMessage();
