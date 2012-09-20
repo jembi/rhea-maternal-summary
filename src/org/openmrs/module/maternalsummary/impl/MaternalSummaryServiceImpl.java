@@ -39,7 +39,21 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 
 	protected static final Log log = LogFactory.getLog(MaternalSummaryServiceImpl.class);
 
+	private static final String ENCOUNTER_TYPE_NAME_OB = "ANC OB and Past Medical History";
+	private static final String ENCOUNTER_TYPE_NAME_PHYSICAL = "ANC Physical";
+	private static final String ENCOUNTER_TYPE_NAME_TESTING = "ANC Testing";
+	private static final String ENCOUNTER_TYPE_NAME_TREATMENTS = "ANC Maternal Treatments and Interventions";
+	private static final String ENCOUNTER_TYPE_NAME_REFERRAL = "ANC Referral";
+	private static final String ENCOUNTER_TYPE_NAME_REFERRAL_CONFIRMATION = "ANC Referral Confirmation";
+	private static final String ENCOUNTER_TYPE_NAME_DELIVERY = "ANC Delivery Report";
+	
+	private static final String ENCOUNTER_TYPE_RAPIDSMS_BIRTH = "RapidSMS Notification BIRTH";
+	private static final String ENCOUNTER_TYPE_RAPIDSMS_RISK = "RapidSMS Notification RISK";
+	private static final String ENCOUNTER_TYPE_RAPIDSMS_MATERNAL_DEATH = "RapidSMS Notification Maternal Death";
+	
+	private static final String IMPORTED_APPEND = " IMPORTED";
 
+	
 	@Override
 	public MaternalSummary getMaternalSummary(int patientId) {
 		Integer key = buildKey(MaternalSummary.class, patientId);
@@ -68,8 +82,10 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	
 	private List<DeliverySummaryEntry> getDeliverySummary(Patient p) {
 		List<DeliverySummaryEntry> res = new ArrayList<DeliverySummaryEntry>();
+		List<Encounter> encs = getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_DELIVERY);
+		encs.addAll( getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_DELIVERY + IMPORTED_APPEND) );
 		
-		for (Encounter enc : getEncountersForForm(p, "RHEA ANC Delivery Report", "Delivery Report")) {
+		for (Encounter enc : encs) {
 			DeliverySummaryEntry dse = new DeliverySummaryEntry();
 			
 			for (Obs obs : enc.getObs()) {
@@ -123,8 +139,9 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	}
 	
 	private void fillOBAndPastMedicalHistory(ObsHistory dst, Patient p) {
-		List<Encounter> encs = getEncountersForForm(p, "RHEA OB and Past Medical History", "Past Medical History");
-		if (encs==null || encs.isEmpty())
+		List<Encounter> encs = getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_OB);
+		encs.addAll( getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_OB + IMPORTED_APPEND) );
+		if (encs.isEmpty())
 			return;
 		
 		Encounter latest = getLatestEncounter(encs);
@@ -186,8 +203,9 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	}
 	
 	private void fillPhysical(ObsHistory dst, Patient p) {
-		List<Encounter> encs = getEncountersForForm(p, "RHEA ANC Physical", "Physical");
-		if (encs==null || encs.isEmpty())
+		List<Encounter> encs = getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_PHYSICAL);
+		encs.addAll( getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_PHYSICAL + IMPORTED_APPEND) );
+		if (encs.isEmpty())
 			return;
 		
 		Encounter latest = getLatestEncounter(encs);
@@ -271,8 +289,9 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	}
 		
 	private void fillHistory(MedicalHistory dst, Patient p) {
-		List<Encounter> encs = getEncountersForForm(p, "RHEA OB and Past Medical History", "Past Medical History");
-		if (encs==null || encs.isEmpty())
+		List<Encounter> encs = getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_OB);
+		encs.addAll( getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_OB + IMPORTED_APPEND) );
+		if (encs.isEmpty())
 			return;
 		
 		for (int i=encs.size()-1; i>=0; i--) {
@@ -304,7 +323,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	}
 	
 	private void fillTests(TestsAndTreatment dst, Patient p) {
-		Encounter latest = getLatestEncounterForForm(p, "RHEA ANC Testing", "Testing");
+		Encounter latest = getLatestEncounter(p, ENCOUNTER_TYPE_NAME_TESTING, ENCOUNTER_TYPE_NAME_TESTING + IMPORTED_APPEND);
 		if (latest==null)
 			return;
 		
@@ -365,8 +384,9 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	}
 	
 	private void fillTreatmentInterventions(TestsAndTreatment dst, Patient p) {
-		List<Encounter> encs = getEncountersForForm(p, "RHEA Maternal Treatments and Interventions", "Maternal Treatments and Interventions");
-		if (encs==null || encs.isEmpty())
+		List<Encounter> encs = getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_TREATMENTS);
+		encs.addAll( getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_TREATMENTS + IMPORTED_APPEND) );
+		if (encs.isEmpty())
 			return;
 		
 		for (Encounter enc : encs) {
@@ -395,8 +415,10 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	
 	private List<ANCVisitsEntry> getANCVisits(Patient p) {
 		List<ANCVisitsEntry> res = new ArrayList<ANCVisitsEntry>();
+		List<Encounter> encs = getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_PHYSICAL);
+		encs.addAll( getEncountersForEncounterType(p, ENCOUNTER_TYPE_NAME_PHYSICAL + IMPORTED_APPEND) );
 		
-		for (Encounter enc : getEncountersForForm(p, "RHEA ANC Physical", "Physical")) {
+		for (Encounter enc : encs) {
 			ANCVisitsEntry entry = new ANCVisitsEntry();
 			entry.setDate(enc.getEncounterDatetime());
 			
@@ -433,14 +455,20 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	private Referrals getReferrals(Patient p) {
 		Referrals dst = new Referrals();
 		EncounterService es = Context.getEncounterService();
-		EncounterType referralEncounterType = Context.getEncounterService().getEncounterType("ANC Referral");
-		EncounterType referralConfirmationEncounterType = Context.getEncounterService().getEncounterType("ANC Referral Confirmation");
+		
+		List<EncounterType> referralEncounterTypes = new ArrayList<EncounterType>(2);
+		referralEncounterTypes.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_NAME_REFERRAL) );
+		referralEncounterTypes.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_NAME_REFERRAL + IMPORTED_APPEND) );
+		
+		List<EncounterType> referralConfirmationEncounterTypes = new ArrayList<EncounterType>(2);
+		referralConfirmationEncounterTypes.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_NAME_REFERRAL_CONFIRMATION) );
+		referralConfirmationEncounterTypes.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_NAME_REFERRAL_CONFIRMATION + IMPORTED_APPEND) );
 		
 		List<Encounter> referrals = es.getEncounters(
-			p, null, null, null, null, Collections.singleton(referralEncounterType), null, false
+			p, null, null, null, null, referralEncounterTypes, null, false
 		);
 		List<Encounter> confirmations = es.getEncounters(
-			p, null, null, null, null, Collections.singleton(referralConfirmationEncounterType), null, false
+			p, null, null, null, null, referralConfirmationEncounterTypes, null, false
 		);
 		
 		Collections.sort(referrals, new EncDateSorter());
@@ -517,9 +545,9 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		EncounterService es = Context.getEncounterService();
 		List<RapidSMSMessage> res = new ArrayList<RapidSMSMessage>();
 		List<EncounterType> types = new ArrayList<EncounterType>(3);
-		types.add( Context.getEncounterService().getEncounterType("RapidSMS Notification BIRTH") );
-		types.add( Context.getEncounterService().getEncounterType("RapidSMS Notification RISK") );
-		types.add( Context.getEncounterService().getEncounterType("RapidSMS Notification Maternal Death") );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_BIRTH) );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_RISK) );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_MATERNAL_DEATH) );
 		
 		for (EncounterType type : types) {
 			if (type==null) {
@@ -573,18 +601,55 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		if (form==null)
 			form = searchForForm(fallbackName);
 		
-		return Context.getEncounterService().getEncounters(
+		List<Encounter> res = Context.getEncounterService().getEncounters(
 			p, (Location)null, (Date) null, (Date) null, (Collection<Form>)Collections.singleton(form),
 			(Collection<EncounterType>)null, (Collection<User>)null, false
 		);
+
+		return res!=null ? res : Collections.<Encounter>emptyList();
 	}
 	
 	private Encounter getLatestEncounterForForm(Patient p, String formName, String fallbackName) {
 		List<Encounter> encounters = getEncountersForForm(p, formName, fallbackName);
-		if (encounters==null || encounters.isEmpty())
+		if (encounters.isEmpty())
 			return null;
 		
 		return getLatestEncounter(encounters);
+	}
+
+	private List<Encounter> getEncountersForEncounterType(Patient p, String encounterTypeName) {
+		EncounterType encounterType = Context.getEncounterService().getEncounterType(encounterTypeName);
+		if (encounterType==null) {
+			log.error("No encounter type with name " + encounterTypeName + " found. Have the correct encounter types been set?");
+			return Collections.<Encounter>emptyList();
+		}
+		
+		List<Encounter> res = Context.getEncounterService().getEncounters(
+			p, (Location)null, (Date) null, (Date) null, (Collection<Form>)null,
+			(Collection<EncounterType>)Collections.singleton(encounterType), (Collection<User>)null, false
+		);
+		
+		return res!=null ? res : Collections.<Encounter>emptyList();
+	}
+	
+	private Encounter getLatestEncounterForEncounterType(Patient p, String encounterTypeName) {
+		List<Encounter> encounters = getEncountersForEncounterType(p, encounterTypeName);
+		if (encounters.isEmpty())
+			return null;
+		
+		return getLatestEncounter(encounters);
+	}
+	
+	private Encounter getLatestEncounter(Patient p, String localEncounterTypeName, String shrImportedEncounterTypeName) {
+		Encounter local = getLatestEncounterForEncounterType(p, localEncounterTypeName);
+		Encounter imported = getLatestEncounterForEncounterType(p, shrImportedEncounterTypeName);
+		
+		if (local==null)
+			return imported;
+		if (imported==null)
+			return local;
+		
+		return local.getEncounterDatetime().after(imported.getEncounterDatetime()) ? local : imported;
 	}
 	
 	private Encounter getLatestEncounter(List<Encounter> encounters) {
