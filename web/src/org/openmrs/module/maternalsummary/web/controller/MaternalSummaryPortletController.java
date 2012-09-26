@@ -13,12 +13,16 @@
  */
 package org.openmrs.module.maternalsummary.web.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.EncounterType;
+import org.openmrs.Form;
+import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.maternalsummary.MaternalSummary;
 import org.openmrs.module.maternalsummary.MaternalSummaryService;
@@ -49,5 +53,29 @@ public class MaternalSummaryPortletController extends PortletController {
 		model.put("ANCVisits", summary.getANCVisits());
 		model.put("referrals", summary.getReferrals());
 		model.put("rapidsmsMessages", summary.getRapidSMSMessages());
+		model.put("referralConfirmationFormId", getReferralConfirmationFormId());
+	}
+
+	private Integer getReferralConfirmationFormId() {
+		FormService fs = Context.getFormService();
+		Form res = fs.getForm("RHEA ANC 6: Referral Confirmation Form");
+		
+		if (res==null) {
+			List<Form> fuzzyMatches = fs.getForms("Referral Confirmation", true);
+			if (fuzzyMatches!=null && !fuzzyMatches.isEmpty())
+				res = fuzzyMatches.get(0);
+		}
+		
+		if (res==null) {
+			EncounterType et = Context.getEncounterService().getEncounterType("ANC Referral Confirmation");
+			for (Form f : fs.getAllForms()) {
+				if (f.getEncounterType().equals(et)) {
+					res = f;
+					break;
+				}
+			}
+		}
+		
+		return res!=null ? res.getFormId() : null;
 	}
 }

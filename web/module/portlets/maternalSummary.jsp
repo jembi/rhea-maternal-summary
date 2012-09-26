@@ -401,7 +401,7 @@
 		<c:when test="${model.referrals.referredButNotConfirmed}">
 			<p><spring:message code="maternalsummary.hasBeenReferredButNotConfirmed" /></p>
 			<p><b><span style="color: #FF0000;"><spring:message code="maternalsummary.hasBeenReferredButNotConfirmedWarning" /></span></b></p>
-			<p><a href="${pageContext.request.contextPath}/module/htmlformentry/htmlFormEntry.form?personId=<%=request.getParameter("patientId")%>&patientId=<%=request.getParameter("patientId")%>&returnUrl=&formId=10">Referral Confirmation Form</a></p>
+			<p><a href="${pageContext.request.contextPath}/module/htmlformentry/htmlFormEntry.form?personId=<%=request.getParameter("patientId")%>&patientId=<%=request.getParameter("patientId")%>&returnUrl=&formId=${model.referralConfirmationFormId}">Referral Confirmation Form</a></p>
 		</c:when>
 	</c:choose>
 	<table>
