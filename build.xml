@@ -57,13 +57,14 @@
 		
 		<!--  Compile module java files -->
 		<javac destdir="build" classpathref="classpath" debug="true" debuglevel="lines,source,vars">
+			<compilerarg line="-encoding UTF-8 -source 1.6 -target 1.6" />
 			<src path="src/" />
 			<include name="**/*.java" />
 		</javac>
 		
 		<!--  Compile module web java files -->
 		<javac destdir="build" classpathref="classpath" debug="true" debuglevel="lines,source,vars">
-			<compilerarg line="-g" />
+			<compilerarg line="-g -encoding UTF-8 -source 1.6 -target 1.6" />
 			<src path="web/src/" />
 			<include name="**/*.java" />
 		</javac>

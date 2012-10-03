@@ -307,7 +307,7 @@ public class MaternalSummary {
 			renderer.tableAdd(toString(visit.getWeight()) + " kg");
 			renderer.tableAdd(toString(visit.getWeightChange()) + " kg");
 			renderer.tableAdd( toString(visit.getBloodPressureSystolic()) + " / " + toString(visit.getBloodPressureDiastolic()) + " mmHg" );
-			renderer.tableAdd(toString(visit.getTemperature()) + " ¡C");
+			renderer.tableAdd(toString(visit.getTemperature()) + " Â°C");
 			renderer.tableAdd(toString(visit.getUterusLength()) + " cm");
 			renderer.tableAdd(toString(visit.getFetalHeartRate()) + " bpm");
 		}
