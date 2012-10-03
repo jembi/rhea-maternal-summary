@@ -75,7 +75,7 @@
 		<mkdir dir="dist" />
 		
 		<!-- Copy module metadata -->
-		<copy todir="build/">
+		<copy todir="build/" encoding="UTF-8">
 			<fileset dir="metadata/" includes="**/*" />
 			<filterset refid="variables.to.replace" />
 		</copy>
