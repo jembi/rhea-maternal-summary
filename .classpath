@@ -7,9 +7,6 @@
 	<classpathentry kind="lib" path="lib-common/hibernate3.jar"/>
 	<classpathentry kind="lib" path="lib-common/jsp-api.jar"/>
 	<classpathentry kind="lib" path="lib-common/junit-3.8.1.jar"/>
-	<classpathentry kind="lib" path="lib-common/openmrs-api-1.6.5.25545-.jar"/>
-	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.6.5.25545-.jar"/>
-	<classpathentry kind="lib" path="lib-common/tests-openmrs-api-1.6.5.25545-.jar"/>
 	<classpathentry kind="lib" path="lib-common/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib-common/spring-framework/com.springsource.org.aopalliance-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib-common/spring-framework/org.springframework.aop-3.0.2.RELEASE.jar"/>
@@ -29,7 +26,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/joda-time-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/itextpdf-5.3.0.jar"/>
-	<classpathentry kind="lib" path="/Users/hannes/Projects/RHEA/maternalsummary/lib/ehcache-1.2.4.jar"/>
-	<classpathentry kind="lib" path="/Users/hannes/Projects/RHEA/maternalsummary/lib-common/rheapocadapter-api-0.5.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/ehcache-1.2.4.jar"/>
+	<classpathentry kind="lib" path="lib-common/rheapocadapter-api-0.5.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-api-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-web-1.9.1.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
