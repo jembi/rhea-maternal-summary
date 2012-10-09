@@ -232,9 +232,9 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		
 		DateTime from = new DateTime(dst.getDateOfLMP());
 		DateTime to = new DateTime();
-		dst.setGestationalAge( Weeks.weeksBetween(from, to).getWeeks() );
+		dst.setGestationalAge( Weeks.weeksBetween(from, to).getWeeks()+1 );
 		
-		if (dst.getGestationalAge()<0 || dst.getGestationalAge()>46)
+		if (dst.getGestationalAge()<=0 || dst.getGestationalAge()>46)
 			dst.setGestationalAge(null);
 	}
 	
