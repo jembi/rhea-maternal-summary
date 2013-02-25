@@ -69,12 +69,13 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	
 	@Override
 	public MaternalSummary getMaternalSummary(int patientId) {
-		Integer key = buildKey(MaternalSummary.class, patientId);
-		MaternalSummary res = (MaternalSummary)DataCache.get(key);
-		if (res!=null)
-			return res;
+		//Caching
+		//Integer key = buildKey(MaternalSummary.class, patientId);
+		//MaternalSummary res = (MaternalSummary)DataCache.get(key);
+		//if (res!=null)
+		//	return res;
 		
-		res = new MaternalSummary();
+		MaternalSummary res = new MaternalSummary();
 		Patient p = Context.getPatientService().getPatient(patientId);
 		
 		res.setPatient(p);
@@ -86,7 +87,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		res.setReferrals(getReferrals(p));
 		res.setRapidSMSMessages(getRapidSMSMessages(p));
 		
-		DataCache.put(key, res);
+		//DataCache.put(key, res);
 		return res;
 	}
 	
@@ -320,18 +321,19 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	/* Tests and Treatment */
 	
 	private TestsAndTreatment getTestsAndTreatment(Patient p) {
-		Integer key = buildKey(TestsAndTreatment.class, p.getId());
-		TestsAndTreatment res = (TestsAndTreatment)DataCache.get(key);
-		if (res!=null)
-			return res;
+		//Caching
+		//Integer key = buildKey(TestsAndTreatment.class, p.getId());
+		//TestsAndTreatment res = (TestsAndTreatment)DataCache.get(key);
+		//if (res!=null)
+		//	return res;
 		
-		res = new TestsAndTreatment();
+		TestsAndTreatment res = new TestsAndTreatment();
 		
 		fillTests(res, p);
 		//fillSeroPositiveWomen(res, p);
 		fillTreatmentInterventions(res, p);
 		
-		DataCache.put(key, res);
+		//DataCache.put(key, res);
 		return res;
 	}
 	
