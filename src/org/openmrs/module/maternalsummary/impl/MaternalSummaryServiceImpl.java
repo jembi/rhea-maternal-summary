@@ -559,10 +559,13 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	private List<RapidSMSMessage> getRapidSMSMessages(Patient p) {
 		EncounterService es = Context.getEncounterService();
 		List<RapidSMSMessage> res = new ArrayList<RapidSMSMessage>();
-		List<EncounterType> types = new ArrayList<EncounterType>(3);
+		List<EncounterType> types = new ArrayList<EncounterType>(6);
 		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_BIRTH) );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_BIRTH  + IMPORTED_APPEND) );
 		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_RISK) );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_RISK + IMPORTED_APPEND) );  
 		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_MATERNAL_DEATH) );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_MATERNAL_DEATH + IMPORTED_APPEND) );
 		
 		for (EncounterType type : types) {
 			if (type==null) {
