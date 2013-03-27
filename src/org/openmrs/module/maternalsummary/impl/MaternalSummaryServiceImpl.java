@@ -69,12 +69,13 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	
 	@Override
 	public MaternalSummary getMaternalSummary(int patientId) {
-		Integer key = buildKey(MaternalSummary.class, patientId);
-		MaternalSummary res = (MaternalSummary)DataCache.get(key);
-		if (res!=null)
-			return res;
+		//Caching
+		//Integer key = buildKey(MaternalSummary.class, patientId);
+		//MaternalSummary res = (MaternalSummary)DataCache.get(key);
+		//if (res!=null)
+		//	return res;
 		
-		res = new MaternalSummary();
+		MaternalSummary res = new MaternalSummary();
 		Patient p = Context.getPatientService().getPatient(patientId);
 		
 		res.setPatient(p);
@@ -86,7 +87,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		res.setReferrals(getReferrals(p));
 		res.setRapidSMSMessages(getRapidSMSMessages(p));
 		
-		DataCache.put(key, res);
+		//DataCache.put(key, res);
 		return res;
 	}
 	
@@ -102,21 +103,21 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			DeliverySummaryEntry dse = new DeliverySummaryEntry();
 			
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.DATE_OF_DELIVERY.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.DATE_OF_DELIVERY.getConcept().equals(obs.getConcept()))
 					dse.setDateTime(obs.getValueDatetime());
-				else if (MaternalConcept.MODE_OF_DELIVERY.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.MODE_OF_DELIVERY.getConcept().equals(obs.getConcept()))
 					dse.setModeOfDelivery(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.TYPE_OF_BIRTH.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.TYPE_OF_BIRTH.getConcept().equals(obs.getConcept()))
 					dse.setTypeOfBirth(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.BIRTH_WEIGHT.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.BIRTH_WEIGHT.getConcept().equals(obs.getConcept()))
 					dse.setBirthWeight(obs.getValueNumeric());
-				else if (MaternalConcept.GENDER.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.GENDER.getConcept().equals(obs.getConcept()))
 					dse.setGender(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.PRETERM_OR_TERM.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.PRETERM_OR_TERM.getConcept().equals(obs.getConcept()))
 					dse.setPretermOrTerm(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.BLOOD_LOSS.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.BLOOD_LOSS.getConcept().equals(obs.getConcept()))
 					dse.setBloodLoss(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.MATERNAL_OUTCOME.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.MATERNAL_OUTCOME.getConcept().equals(obs.getConcept()))
 					dse.setMaternalOutcome(obs.getValueAsString(Context.getLocale()));
 			}
 			
@@ -160,21 +161,21 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		Encounter latest = getLatestEncounter(encs);
 		
 		for (Obs obs : latest.getObs()) {
-			if (MaternalConcept.NUM_PREGNANCIES.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			if (MaternalConcept.NUM_PREGNANCIES.getConcept().equals(obs.getConcept()))
 				dst.setNumPregnancies(obs.getValueNumeric().intValue());
-			else if (MaternalConcept.NUM_TERM_BIRTHS.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.NUM_TERM_BIRTHS.getConcept().equals(obs.getConcept()))
 				dst.setNumLiveBirths(obs.getValueNumeric().intValue());
-			else if (MaternalConcept.NUM_STILL_BIRTHS.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.NUM_STILL_BIRTHS.getConcept().equals(obs.getConcept()))
 				dst.setNumStillBirths(obs.getValueNumeric().intValue());
-			else if (MaternalConcept.NUM_CSECTIONS.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.NUM_CSECTIONS.getConcept().equals(obs.getConcept()))
 				dst.setNumCSections(obs.getValueNumeric().intValue());
-			else if (MaternalConcept.LAST_BORN_STATUS.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.LAST_BORN_STATUS.getConcept().equals(obs.getConcept()))
 				dst.setLastBornAlive(lastBornStatusObsValueAsBoolean(obs));
-			else if (MaternalConcept.LAST_BORN_BIRTHDATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.LAST_BORN_BIRTHDATE.getConcept().equals(obs.getConcept()))
 				dst.setLastBornBirthDate(obs.getValueDatetime());
-			else if (MaternalConcept.DATE_OF_LMP.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.DATE_OF_LMP.getConcept().equals(obs.getConcept()))
 				dst.setDateOfLMP(obs.getValueDatetime());
-			else if (MaternalConcept.EXPECTED_DELIVERY_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.EXPECTED_DELIVERY_DATE.getConcept().equals(obs.getConcept()))
 				dst.setExpectedDeliveryDate(obs.getValueDatetime());
 		}
 		
@@ -184,7 +185,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		for (int i=encs.size()-1; i>=0; i--) {
 			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.OBS_RISK.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.OBS_RISK.getConcept().equals(obs.getConcept()))
 					addRiskIfLatest(
 						dst.getObsRisks(),
 						new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime())
@@ -223,14 +224,14 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		
 		Encounter latest = getLatestEncounter(encs);
 		for (Obs obs : latest.getObs()) {
-			if (MaternalConcept.PRESENTATION.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			if (MaternalConcept.PRESENTATION.getConcept().equals(obs.getConcept()))
 				dst.setPresentation(obs.getValueAsString(Context.getLocale()));
 		}
 			
 		for (int i=encs.size()-1; i>=0; i--) {
 			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.RISK.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.RISK.getConcept().equals(obs.getConcept()))
 					addRiskIfLatest(
 						dst.getRisks(),
 						new ObsHistory.Risk(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime())
@@ -310,7 +311,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		for (int i=encs.size()-1; i>=0; i--) {
 			Encounter enc = encs.get(i);
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.MEDICAL_HISTORY.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.MEDICAL_HISTORY.getConcept().equals(obs.getConcept()))
 					dst.addHistory(new MedicalHistory.HistoryItem(obs.getValueAsString(Context.getLocale()), enc.getEncounterDatetime()));
 			}
 		}
@@ -320,18 +321,19 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	/* Tests and Treatment */
 	
 	private TestsAndTreatment getTestsAndTreatment(Patient p) {
-		Integer key = buildKey(TestsAndTreatment.class, p.getId());
-		TestsAndTreatment res = (TestsAndTreatment)DataCache.get(key);
-		if (res!=null)
-			return res;
+		//Caching
+		//Integer key = buildKey(TestsAndTreatment.class, p.getId());
+		//TestsAndTreatment res = (TestsAndTreatment)DataCache.get(key);
+		//if (res!=null)
+		//	return res;
 		
-		res = new TestsAndTreatment();
+		TestsAndTreatment res = new TestsAndTreatment();
 		
 		fillTests(res, p);
 		//fillSeroPositiveWomen(res, p);
 		fillTreatmentInterventions(res, p);
 		
-		DataCache.put(key, res);
+		//DataCache.put(key, res);
 		return res;
 	}
 	
@@ -341,30 +343,30 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			return;
 		
 		for (Obs obs : latest.getObs()) {
-			if (MaternalConcept.RPR_RESULT.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			if (MaternalConcept.RPR_RESULT.getConcept().equals(obs.getConcept()))
 				dst.getTests().setHIVResult(obs.getValueAsString(Context.getLocale()));
-			else if (MaternalConcept.RPR_TEST_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.RPR_TEST_DATE.getConcept().equals(obs.getConcept()))
 				dst.getTests().setHIVTestDate(obs.getValueDatetime());
-			else if (MaternalConcept.RPR_RESULT_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.RPR_RESULT_DATE.getConcept().equals(obs.getConcept()))
 				dst.getTests().setHIVResultDate(obs.getValueDatetime());
-			else if (MaternalConcept.HIV_RESULT.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.HIV_RESULT.getConcept().equals(obs.getConcept()))
 				dst.getTests().setHIVResult(obs.getValueAsString(Context.getLocale()));
-			else if (MaternalConcept.HIV_TEST_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.HIV_TEST_DATE.getConcept().equals(obs.getConcept()))
 				dst.getTests().setHIVTestDate(obs.getValueDatetime());
-			else if (MaternalConcept.HIV_RESULT_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.HIV_RESULT_DATE.getConcept().equals(obs.getConcept()))
 				dst.getTests().setHIVResultDate(obs.getValueDatetime());
-			else if (MaternalConcept.TREATED_FOR_SYPHILIS.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.TREATED_FOR_SYPHILIS.getConcept().equals(obs.getConcept()))
 				dst.getTests().setTreatedForSyphilis(obs.getValueAsString(Context.getLocale()));
 			
-			else if (MaternalConcept.PARTNER_RPR_RESULT.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.PARTNER_RPR_RESULT.getConcept().equals(obs.getConcept()))
 				dst.getPartnerTests().setHIVResult(obs.getValueAsString(Context.getLocale()));
-			else if (MaternalConcept.PARTNER_RPR_TEST_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.PARTNER_RPR_TEST_DATE.getConcept().equals(obs.getConcept()))
 				dst.getPartnerTests().setHIVTestDate(obs.getValueDatetime());
-			else if (MaternalConcept.PARTNER_HIV_RESULT.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.PARTNER_HIV_RESULT.getConcept().equals(obs.getConcept()))
 				dst.getPartnerTests().setHIVResult(obs.getValueAsString(Context.getLocale()));
-			else if (MaternalConcept.PARTNER_HIV_TEST_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.PARTNER_HIV_TEST_DATE.getConcept().equals(obs.getConcept()))
 				dst.getPartnerTests().setHIVTestDate(obs.getValueDatetime());
-			else if (MaternalConcept.PARTNER_TREATED_FOR_SYPHILIS.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+			else if (MaternalConcept.PARTNER_TREATED_FOR_SYPHILIS.getConcept().equals(obs.getConcept()))
 				dst.getPartnerTests().setTreatedForSyphilis(obs.getValueAsString(Context.getLocale()));
 		}
 	}
@@ -375,19 +377,19 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			TestsAndTreatment.SeroPositiveWomen spw = new TestsAndTreatment.SeroPositiveWomen();
 			
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.CREATININE_LEVEL.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.CREATININE_LEVEL.getConcept().equals(obs.getConcept()))
 					spw.setCreatinineLevel(obs.getValueNumeric());
-				else if (MaternalConcept.CD4_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.CD4_DATE.getConcept().equals(obs.getConcept()))
 					spw.setCD4CountDate(obs.getValueDatetime());
-				else if (MaternalConcept.CD4_COUNT.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.CD4_COUNT.getConcept().equals(obs.getConcept()))
 					spw.setCD4Count(obs.getValueNumeric());
-				else if (MaternalConcept.WHO_STAGE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.WHO_STAGE.getConcept().equals(obs.getConcept()))
 					spw.setWHOStage(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.ARV_REGIMEN.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.ARV_REGIMEN.getConcept().equals(obs.getConcept()))
 					spw.setARVProphylaxis(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.ARV_START_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.ARV_START_DATE.getConcept().equals(obs.getConcept()))
 					spw.setARVProphylaxisDate(obs.getValueDatetime());
-				else if (MaternalConcept.COTRIMOXAZOLE_DATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.COTRIMOXAZOLE_DATE.getConcept().equals(obs.getConcept()))
 					spw.setCotrimoxazoleStartDate(obs.getValueDatetime());
 			}
 			
@@ -404,22 +406,22 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 		
 		for (Encounter enc : encs) {
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.INTERVENTION_IRON_AND_FOLIC_ACID.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.INTERVENTION_IRON_AND_FOLIC_ACID.getConcept().equals(obs.getConcept()))
 					addInterventionIfGiven(enc, obs, dst, "Iron and Folic Acid");
-				else if (MaternalConcept.INTERVENTION_PYRIMETHAMINE_SULFADOXINE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.INTERVENTION_PYRIMETHAMINE_SULFADOXINE.getConcept().equals(obs.getConcept()))
 					addInterventionIfGiven(enc, obs, dst, "Pyrimethamine Sulfadoxine");
-				else if (MaternalConcept.INTERVENTION_MEBENDAZOLE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.INTERVENTION_MEBENDAZOLE.getConcept().equals(obs.getConcept()))
 					addInterventionIfGiven(enc, obs, dst, "Mebendazole");
-				else if (MaternalConcept.INTERVENTION_MOSQUITO_NET.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.INTERVENTION_MOSQUITO_NET.getConcept().equals(obs.getConcept()))
 					addInterventionIfGiven(enc, obs, dst, "Mosquito Net");
-				else if (MaternalConcept.INTERVENTION_TETANUS_VACCINE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.INTERVENTION_TETANUS_VACCINE.getConcept().equals(obs.getConcept()))
 					addInterventionIfGiven(enc, obs, dst, "Tetanus Vaccine");
 			}
 		}
 	}
 	
 	private static void addInterventionIfGiven(Encounter enc, Obs obs, TestsAndTreatment dst, String interventionName) {
-		if (MaternalConcept.YES.getConcept().getConceptId().equals(obs.getValueCoded()))
+		if (MaternalConcept.YES.getConcept().equals(obs.getValueCoded()))
 			dst.addIntervention(new TestsAndTreatment.TreatmentIntervention(interventionName, enc.getEncounterDatetime()));
 	}
 
@@ -436,23 +438,23 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			entry.setDate(enc.getEncounterDatetime());
 			
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.WEIGHT.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.WEIGHT.getConcept().equals(obs.getConcept()))
 					entry.setWeight(obs.getValueNumeric());
-				else if (MaternalConcept.WEIGHT_CHANGE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.WEIGHT_CHANGE.getConcept().equals(obs.getConcept()))
 					entry.setWeightChange(obs.getValueNumeric());
-				else if (MaternalConcept.NUMBER_OF_WEEKS_PREGNANT.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.NUMBER_OF_WEEKS_PREGNANT.getConcept().equals(obs.getConcept()))
 					entry.setWeeksPregnant(obs.getValueNumeric().intValue());
-				else if (MaternalConcept.TEMPERATURE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.TEMPERATURE.getConcept().equals(obs.getConcept()))
 					entry.setTemperature(obs.getValueNumeric());
-				else if (MaternalConcept.BP_SYSTOLIC.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.BP_SYSTOLIC.getConcept().equals(obs.getConcept()))
 					entry.setBloodPressureSystolic(castInt(obs.getValueNumeric()));
-				else if (MaternalConcept.BP_DIASTOLIC.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.BP_DIASTOLIC.getConcept().equals(obs.getConcept()))
 					entry.setBloodPressureDiastolic(castInt(obs.getValueNumeric()));
-				else if (MaternalConcept.UTERUS_LENGTH.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.UTERUS_LENGTH.getConcept().equals(obs.getConcept()))
 					entry.setUterusLength(obs.getValueNumeric());
-				else if (MaternalConcept.FETAL_HEART_RATE.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.FETAL_HEART_RATE.getConcept().equals(obs.getConcept()))
 					entry.setFetalHeartRate(castInt(obs.getValueNumeric()));
-				else if (MaternalConcept.PRESENTATION.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.PRESENTATION.getConcept().equals(obs.getConcept()))
 					entry.setPresentation(obs.getValueAsString(Context.getLocale()));
 			}
 				
@@ -511,11 +513,11 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			ref.setDate(enc.getEncounterDatetime());
 			
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.REFERRED_TO.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.REFERRED_TO.getConcept().equals(obs.getConcept()))
 					ref.setReferredTo(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.REFERRAL_URGENCY.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.REFERRAL_URGENCY.getConcept().equals(obs.getConcept()))
 					ref.setUrgency(obs.getValueAsString(Context.getLocale()));
-				else if (MaternalConcept.REFERRAL_REASON.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				else if (MaternalConcept.REFERRAL_REASON.getConcept().equals(obs.getConcept()))
 					ref.setReason(obs.getValueAsString(Context.getLocale()));
 			}
 			
@@ -533,7 +535,7 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 			ref.setDate(enc.getEncounterDatetime());
 			
 			for (Obs obs : enc.getObs()) {
-				if (MaternalConcept.REFERRAL_CONFIRMATION_COMMENTS.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				if (MaternalConcept.REFERRAL_CONFIRMATION_COMMENTS.getConcept().equals(obs.getConcept()))
 					ref.setComments(obs.getValueAsString(Context.getLocale()));
 			}
 			
@@ -557,10 +559,13 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 	private List<RapidSMSMessage> getRapidSMSMessages(Patient p) {
 		EncounterService es = Context.getEncounterService();
 		List<RapidSMSMessage> res = new ArrayList<RapidSMSMessage>();
-		List<EncounterType> types = new ArrayList<EncounterType>(3);
+		List<EncounterType> types = new ArrayList<EncounterType>(6);
 		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_BIRTH) );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_BIRTH  + IMPORTED_APPEND) );
 		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_RISK) );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_RISK + IMPORTED_APPEND) );  
 		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_MATERNAL_DEATH) );
+		types.add( Context.getEncounterService().getEncounterType(ENCOUNTER_TYPE_RAPIDSMS_MATERNAL_DEATH + IMPORTED_APPEND) );
 		
 		for (EncounterType type : types) {
 			if (type==null) {
