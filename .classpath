@@ -28,7 +28,7 @@
 	<classpathentry kind="lib" path="lib-common/spring-framework/org.springframework.web.servlet-3.0.2.RELEASE.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/joda-time-2.1.jar"/>
-	<classpathentry kind="lib" path="lib/itextpdf-5.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/iText-4.2.0-com.itextpdf.jar"/>
 	<classpathentry kind="lib" path="/Users/hannes/Projects/RHEA/maternalsummary/lib/ehcache-1.2.4.jar"/>
 	<classpathentry kind="lib" path="/Users/hannes/Projects/RHEA/maternalsummary/lib-common/rheapocadapter-api-0.5.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="build"/>
