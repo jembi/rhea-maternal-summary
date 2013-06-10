@@ -55,7 +55,8 @@ public class MaternalSummaryPortletController extends PortletController {
 	@Override
 	protected void populateModel(HttpServletRequest request, Map<String, Object> model) {
 		MaternalSummaryService mss = Context.getService(MaternalSummaryService.class);
-		int patientId = (Integer)model.get("patientId");
+		Object pid = model.get("patientId");
+		int patientId = (pid instanceof String) ? Integer.parseInt((String)pid) : (Integer)pid;
 		summary = mss.getMaternalSummary(patientId);
 		
 		model.put("isPatientFemale", new Boolean(summary.getPatient().getGender().equalsIgnoreCase("F")));
