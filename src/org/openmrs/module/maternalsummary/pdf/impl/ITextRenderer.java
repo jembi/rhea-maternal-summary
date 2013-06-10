@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.maternalsummary.pdf.impl;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -20,12 +21,10 @@ import java.util.Date;
 
 import org.openmrs.module.maternalsummary.pdf.PDFRenderer;
 
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
@@ -41,12 +40,12 @@ import com.itextpdf.text.pdf.TextField;
 
 public class ITextRenderer implements PDFRenderer {
 	
-	private static final Font FONT_NORMAL = new Font(FontFamily.HELVETICA, 11);
-	private static final Font FONT_HEADER1 = new Font(FontFamily.HELVETICA, 16, Font.BOLD);
-	private static final Font FONT_HEADER2 = new Font(FontFamily.HELVETICA, 14, Font.BOLD);
-	private static final Font FONT_HEADER3 = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
-	private static final Font FONT_TABLE_BOLD = new Font(FontFamily.HELVETICA, 11, Font.BOLD);
-	private static final Font FONT_FOOTER = new Font(FontFamily.HELVETICA, 8);
+	private static final Font FONT_NORMAL = new Font(Font.HELVETICA, 11);
+	private static final Font FONT_HEADER1 = new Font(Font.HELVETICA, 16, Font.BOLD);
+	private static final Font FONT_HEADER2 = new Font(Font.HELVETICA, 14, Font.BOLD);
+	private static final Font FONT_HEADER3 = new Font(Font.HELVETICA, 12, Font.BOLD);
+	private static final Font FONT_TABLE_BOLD = new Font(Font.HELVETICA, 11, Font.BOLD);
+	private static final Font FONT_FOOTER = new Font(Font.HELVETICA, 8);
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
 	
@@ -149,7 +148,7 @@ public class ITextRenderer implements PDFRenderer {
 			TextField text = new TextField(writer, rec, "text_0");
 			
 			text.setBorderStyle(PdfBorderDictionary.STYLE_SOLID);
-            text.setBorderColor(BaseColor.BLACK);
+            text.setBorderColor(Color.BLACK);
             text.setBorderWidth(2);
             text.setFontSize(12);
             text.setOptions(TextField.MULTILINE);
