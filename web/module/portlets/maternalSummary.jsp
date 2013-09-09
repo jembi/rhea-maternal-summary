@@ -16,6 +16,16 @@
 		<input type="submit" value='<spring:message code="maternalsummary.refreshFromSHR" />'>
 	</form>
 	<br/>
+	<c:choose>
+	<c:when test="${model.obsHistory.pregnancySuspected && !model.obsHistory.pregnancyConfirmed}">
+		<b>Pregnancy Suspected</b>
+	</c:when>
+	</c:choose>
+	<c:choose>
+	<c:when test="${model.obsHistory.pregnancyConfirmed}">
+		<b>Pregnancy Confirmed</b>
+	</c:when>
+	</c:choose>
 </div>
 <b class="boxHeader"><spring:message code="maternalsummary.obsHistory" /></b>
 <div class="box">

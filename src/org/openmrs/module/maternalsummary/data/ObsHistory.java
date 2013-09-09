@@ -32,6 +32,8 @@ public class ObsHistory {
 	private String location;
 	private Boolean isSeroPositive;
 	private Integer highestWHOStage;
+	private Boolean pregnancyConfirmed;
+	private Boolean pregnancySuspected;
 	private List<Risk> risks = new ArrayList<Risk>();
 	private List<Risk> obsRisks = new ArrayList<Risk>();
 	
@@ -120,6 +122,18 @@ public class ObsHistory {
 	@Deprecated
 	public void setHighestWHOStage(Integer highestWHOStage) {
 		this.highestWHOStage = highestWHOStage;
+	}
+	public Boolean getPregnancyConfirmed() {
+		return pregnancyConfirmed;
+	}
+	public void setPregnancyConfirmed(Boolean pregnancyConfirmed) {
+		this.pregnancyConfirmed = pregnancyConfirmed;
+	}
+	public Boolean getPregnancySuspected() {
+		return pregnancySuspected;
+	}
+	public void setPregnancySuspected(Boolean pregnancySuspected) {
+		this.pregnancySuspected = pregnancySuspected;
 	}
 	public List<Risk> getRisks() {
 		return risks;

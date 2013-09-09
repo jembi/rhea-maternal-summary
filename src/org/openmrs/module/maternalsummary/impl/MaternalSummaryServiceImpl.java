@@ -177,6 +177,10 @@ public class MaternalSummaryServiceImpl extends BaseOpenmrsService implements Ma
 				dst.setDateOfLMP(obs.getValueDatetime());
 			else if (MaternalConcept.EXPECTED_DELIVERY_DATE.getConcept().equals(obs.getConcept()))
 				dst.setExpectedDeliveryDate(obs.getValueDatetime());
+			else if (MaternalConcept.PREGNANCY_CONFIRMED.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				dst.setPregnancyConfirmed(Boolean.TRUE);
+			else if (MaternalConcept.PREGNANCY_SUSPECTED.getConcept().getConceptId().equals(obs.getConcept().getConceptId()))
+				dst.setPregnancySuspected(Boolean.TRUE);
 		}
 		
 		if (dst.getNumLiveBirths()!=null && dst.getNumStillBirths()!=null)

@@ -94,6 +94,10 @@ public enum MaternalConcept {
 	REFERRAL_URGENCY						("RWCS", "8517"),
 	REFERRAL_REASON							("RWCS", "1739"),
 	REFERRAL_CONFIRMATION_COMMENTS			("RWCS", "8541"),
+	
+	/* ICT4Health 2013 Demo */
+	PREGNANCY_CONFIRMED						("RWCS", "10973"),
+	PREGNANCY_SUSPECTED						("RWCS", "10974"),
 	;
 	
 	
